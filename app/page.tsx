@@ -19,7 +19,7 @@ export default function Page() {
   const background = useTransform(
     scrollYProgress,
     [0, 0.26, 0.55, 1],
-    ["#090807", "#050505", "#100b1a", "#14100f"],
+    ["#f8f3eb", "#f5efe6", "#eee7db", "#e7dece"],
   );
 
   return (
@@ -27,7 +27,7 @@ export default function Page() {
       <motion.main
         ref={mainRef}
         style={{ backgroundColor: background }}
-        className="relative z-10 mb-[72vh] overflow-x-clip rounded-b-[2.6rem] text-[#f8f1e8] md:mb-[78vh] md:rounded-b-[3rem]"
+        className="relative z-10 mb-[72vh] overflow-x-clip rounded-b-[2.6rem] text-cocoa md:mb-[78vh] md:rounded-b-[3rem]"
       >
         <Hero />
 

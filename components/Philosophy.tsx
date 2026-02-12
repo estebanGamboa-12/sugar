@@ -40,14 +40,21 @@ export default function Philosophy() {
   });
 
   return (
-    <section ref={sectionRef} className="relative min-h-[185vh] bg-[#050505] px-6 text-[#efe7db] md:min-h-[260vh] md:px-10">
-      <div className="mx-auto max-w-6xl py-16 md:py-24">
-        <p className="text-center text-xs uppercase tracking-[0.34em] text-[#b99772]">The Philosophy</p>
+    <section
+      ref={sectionRef}
+      className="relative min-h-[170vh] bg-gradient-to-b from-[#f5efe6] via-[#efe7da] to-[#e6ddcd] px-5 text-cocoa md:min-h-[240vh] md:px-10"
+    >
+      <div className="mx-auto max-w-6xl py-14 md:py-24">
+        <p className="text-center text-xs uppercase tracking-[0.34em] text-[#8e6f51]">The Philosophy</p>
+        <p className="mx-auto mt-5 max-w-2xl text-center text-sm text-cocoa/70 md:text-base">
+          Diseñamos cada pieza como una experiencia limpia y elegante: ingredientes nobles, técnica precisa y una estética
+          minimalista en cada detalle.
+        </p>
       </div>
 
       <div className="hidden md:block">
         <div className="sticky top-0 flex h-screen items-center justify-center">
-          <div className="relative h-40 w-full">
+          <div className="relative h-44 w-full">
             {statements.map((text, index) => (
               <PhraseLayer key={text} text={text} index={index} progress={scrollYProgress} />
             ))}
@@ -55,7 +62,7 @@ export default function Philosophy() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-3xl flex-col gap-10 pb-20 pt-8 md:hidden">
+      <div className="mx-auto flex max-w-3xl flex-col gap-6 pb-20 pt-6 md:hidden">
         {statements.map((text) => (
           <motion.article
             key={text}
@@ -63,9 +70,11 @@ export default function Philosophy() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.7 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="rounded-[1.8rem] border border-white/10 bg-white/[0.04] px-6 py-10 text-center backdrop-blur"
+            className="rounded-[1.8rem] border border-[#cab79f] bg-[#f9f4ea] px-6 py-9 text-center shadow-soft"
           >
-            <h2 className="font-[family-name:var(--font-display-serif)] text-5xl leading-[0.95]">{text}</h2>
+            <h2 className="font-[family-name:var(--font-display-serif)] text-[clamp(2.2rem,11vw,3.2rem)] leading-[0.95] text-[#2f2319]">
+              {text}
+            </h2>
           </motion.article>
         ))}
       </div>

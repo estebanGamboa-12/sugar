@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { getGSAP } from "@/lib/gsap";
 import StoryHUD from "@/components/StoryHUD";
 
@@ -20,7 +21,6 @@ const IMAGES = [
   "https://images.unsplash.com/photo-1517244683847-7456b63c5969?auto=format&fit=crop&w=1900&q=80",
 ];
 
-const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
 
 export default function ScrollyRail() {
@@ -32,6 +32,7 @@ export default function ScrollyRail() {
 
   const [hud, setHud] = useState({ current: 1, progress: 0, visible: true });
   const [activeScene, setActiveScene] = useState(0);
+  const [sharedMediaSrc, setSharedMediaSrc] = useState(IMAGES[0]);
   const [isMobile] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(max-width: 767px)").matches : false));
   const [isReduced] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false));
 
@@ -50,16 +51,13 @@ export default function ScrollyRail() {
       const scenes = Array.from(rail.querySelectorAll<HTMLElement>(".story-scene"));
       const placeholders = Array.from(rail.querySelectorAll<HTMLElement>("[data-media-slot]"));
       const beatSize = 1 / BEATS;
-      const snapStep = 1 / (TOTAL_SCENES - 1);
+      const railImages = Array.from(rail.querySelectorAll<HTMLElement>("img"));
 
       if (placeholders[0] && !placeholders[0].contains(media)) {
         placeholders[0].appendChild(media);
       }
 
       let currentScene = 0;
-      let snapTimer: ReturnType<typeof setTimeout> | undefined;
-      let isSnapping = false;
-
       const moveSharedMedia = (sceneIndex: number) => {
         const slot = placeholders[sceneIndex];
         if (!slot || slot.contains(media)) return;
@@ -70,7 +68,7 @@ export default function ScrollyRail() {
             autoAlpha: 0.5,
             duration: 0.2,
             onComplete: () => {
-              image.setAttribute("src", sceneSet[sceneIndex]);
+              setSharedMediaSrc(sceneSet[sceneIndex]);
               gsap.to(image, { autoAlpha: 1, duration: 0.32 });
             },
           });
@@ -104,6 +102,7 @@ export default function ScrollyRail() {
 
       gsap.set(scenes, { autoAlpha: 0, y: 14, scale: 0.985, pointerEvents: "none" });
       gsap.set(scenes[0], { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto" });
+      gsap.set(railImages, { autoAlpha: 1, opacity: 1 });
 
       const master = gsap.timeline({ defaults: { ease: "power2.inOut" } });
 
@@ -112,21 +111,21 @@ export default function ScrollyRail() {
         .to(".s1-vignette", { opacity: 0.3, duration: 0.9 }, 0)
         .to(".s1-copy", { autoAlpha: 0, y: -16, duration: 0.8 }, 0.25)
         .add(() => setSceneVisibility(1), beatSize * 1)
-        .fromTo(".s2-diagonal", { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }, { clipPath: "polygon(0 0, 100% 0, 82% 100%, 0 100%)", duration: 0.9 }, beatSize * 1)
-        .fromTo(".s2-line", { scaleX: 0 }, { scaleX: 1, duration: 0.55, transformOrigin: "left center" }, beatSize * 1.08)
-        .fromTo(".s2-highlight", { xPercent: -130, opacity: 0 }, { xPercent: 140, opacity: 0.25, duration: 0.65 }, beatSize * 1.2)
+        .fromTo(".s2-diagonal", { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)", immediateRender: false }, { clipPath: "polygon(0 0, 100% 0, 82% 100%, 0 100%)", duration: 0.9 }, beatSize * 1)
+        .fromTo(".s2-line", { scaleX: 0, immediateRender: false }, { scaleX: 1, duration: 0.55, transformOrigin: "left center" }, beatSize * 1.08)
+        .fromTo(".s2-highlight", { xPercent: -130, opacity: 0, immediateRender: false }, { xPercent: 140, opacity: 0.25, duration: 0.65 }, beatSize * 1.2)
         .add(() => setSceneVisibility(2), beatSize * 2)
-        .fromTo(".s3-panel-a", { xPercent: -25 }, { xPercent: 0, duration: 0.7 }, beatSize * 2)
-        .fromTo(".s3-panel-b", { xPercent: 20 }, { xPercent: 0, duration: 0.7 }, beatSize * 2.05)
-        .fromTo(".s3-panel-c", { xPercent: -20 }, { xPercent: 0, duration: 0.7 }, beatSize * 2.08)
-        .fromTo(".s3-badge", { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.4 }, beatSize * 2.28)
+        .fromTo(".s3-panel-a", { xPercent: -25, immediateRender: false }, { xPercent: 0, duration: 0.7 }, beatSize * 2)
+        .fromTo(".s3-panel-b", { xPercent: 20, immediateRender: false }, { xPercent: 0, duration: 0.7 }, beatSize * 2.05)
+        .fromTo(".s3-panel-c", { xPercent: -20, immediateRender: false }, { xPercent: 0, duration: 0.7 }, beatSize * 2.08)
+        .fromTo(".s3-badge", { autoAlpha: 0, y: 10, immediateRender: false }, { autoAlpha: 1, y: 0, duration: 0.4 }, beatSize * 2.28)
         .add(() => setSceneVisibility(3), beatSize * 3)
-        .fromTo(".s4-stack", { y: 22, rotate: -1.6, scale: 0.97 }, { y: 0, rotate: 0, scale: 1, duration: 0.65 }, beatSize * 3)
+        .fromTo(".s4-stack", { y: 22, rotate: -1.6, scale: 0.97, immediateRender: false }, { y: 0, rotate: 0, scale: 1, duration: 0.65 }, beatSize * 3)
         .to(".s4-card-a", { y: -8, rotate: -1.8, duration: 0.55 }, beatSize * 3.08)
         .to(".s4-card-b", { y: 6, rotate: 1.6, duration: 0.55 }, beatSize * 3.1)
         .to(".s4-card-c", { y: 12, rotate: 2, duration: 0.55 }, beatSize * 3.12)
         .add(() => setSceneVisibility(4), beatSize * 4)
-        .fromTo(".s5-tile", { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.34 }, beatSize * 4)
+        .fromTo(".s5-tile", { autoAlpha: 0, y: 16, immediateRender: false }, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.34 }, beatSize * 4)
         .add(() => setSceneVisibility(5), beatSize * 5)
         .to(filmTrackRef.current, {
           x: () => {
@@ -136,19 +135,19 @@ export default function ScrollyRail() {
           },
           duration: 1,
         }, beatSize * 5)
-        .fromTo(".s6-item", { clipPath: "inset(14% 10% 14% 10% round 1rem)" }, { clipPath: "inset(0% 0% 0% 0% round 1rem)", stagger: 0.08, duration: 0.36 }, beatSize * 5.05)
+        .fromTo(".s6-item", { clipPath: "inset(14% 10% 14% 10% round 1rem)", immediateRender: false }, { clipPath: "inset(0% 0% 0% 0% round 1rem)", stagger: 0.08, duration: 0.36 }, beatSize * 5.05)
         .add(() => setSceneVisibility(6), beatSize * 6)
-        .fromTo(".s7-mask", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.75 }, beatSize * 6)
-        .fromTo(".s7-quote", { autoAlpha: 0, filter: "blur(6px)", y: 14 }, { autoAlpha: 1, filter: "blur(0px)", y: 0, stagger: 0.1, duration: 0.34 }, beatSize * 6.2)
-        .add(() => setSceneVisibility(7), beatSize * 7)
-        .fromTo(".s8-glass", { backdropFilter: "blur(18px)", opacity: 0.78 }, { backdropFilter: "blur(8px)", opacity: 1, duration: 0.8 }, beatSize * 7)
+        .fromTo(".s7-mask", { clipPath: "inset(0 100% 0 0)", immediateRender: false }, { clipPath: "inset(0 0% 0 0)", duration: 0.75 }, beatSize * 6)
+        .fromTo(".s7-quote", { autoAlpha: 0, filter: "blur(6px)", y: 14, immediateRender: false }, { autoAlpha: 1, filter: "blur(0px)", y: 0, stagger: 0.1, duration: 0.34 }, beatSize * 6.2)
+        .add(() => setSceneVisibility(7), beatSize * 7.1)
+        .fromTo(".s8-glass", { backdropFilter: "blur(18px)", opacity: 0.78, immediateRender: false }, { backdropFilter: "blur(8px)", opacity: 1, duration: 0.8 }, beatSize * 7.1)
         .to(cameraRef.current, { scale: 1, rotateZ: 0, x: 0, y: 0, duration: 0.8, ease: "power2.out" }, beatSize * 8)
-        .fromTo(".dock-settle", { y: 0 }, { y: -2, yoyo: true, repeat: 1, duration: 0.16 }, beatSize * 8.05);
+        .fromTo(".dock-settle", { y: 0, immediateRender: false }, { y: -2, yoyo: true, repeat: 1, duration: 0.16 }, beatSize * 8.05);
 
       const trigger = ScrollTrigger.create({
         trigger: stageRef.current,
         start: "top top",
-        end: mobileView ? "+=900%" : "+=1400%",
+        end: "+=1200%",
         pin: true,
         scrub: reducedMotion ? false : 1.08,
         animation: master,
@@ -167,17 +166,6 @@ export default function ScrollyRail() {
             gsap.to(media, { filter: `blur(${blur.toFixed(2)}px)`, duration: 0.18, overwrite: "auto" });
           }
 
-          if (reducedMotion || mobileView || !window.__lenis || isSnapping) return;
-          if (snapTimer) clearTimeout(snapTimer);
-          snapTimer = setTimeout(() => {
-            const snapProgress = gsap.utils.snap(snapStep)(self.progress);
-            const targetY = self.start + (self.end - self.start) * snapProgress;
-            isSnapping = true;
-            window.__lenis?.scrollTo(targetY, { duration: 0.9, easing: easeOutCubic });
-            window.setTimeout(() => {
-              isSnapping = false;
-            }, 540);
-          }, 170);
         },
       });
 
@@ -195,7 +183,6 @@ export default function ScrollyRail() {
       requestAnimationFrame(() => ScrollTrigger.refresh());
 
       return () => {
-        if (snapTimer) clearTimeout(snapTimer);
         window.removeEventListener("pointermove", spotlightMove);
         trigger.kill();
       };
@@ -213,7 +200,7 @@ export default function ScrollyRail() {
 
       <div ref={stageRef} className="stage relative h-screen overflow-hidden border-y border-white/10">
         <div ref={cameraRef} className="camera relative h-full w-full will-change-transform">
-          <article className="story-scene absolute inset-0 p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-10 p-6 md:p-10">
             <div className="h-full rounded-[2rem] border border-white/10 bg-[#0b0b0b] p-6 md:p-10">
               <div data-media-slot className="relative mx-auto h-[66vh] max-w-5xl overflow-hidden rounded-[1.6rem]" />
               <div className="s1-vignette pointer-events-none absolute inset-0 opacity-0" style={{ background: "radial-gradient(circle at center, transparent 14%, rgba(0,0,0,0.8) 82%)" }} />
@@ -224,7 +211,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 grid items-center p-6 md:grid-cols-12 md:p-10">
+          <article className="story-scene absolute inset-0 z-20 grid items-center p-6 md:grid-cols-12 md:p-10">
             <div className="md:col-span-8">
               <div data-media-slot className="s2-diagonal relative h-[64vh] overflow-hidden rounded-[1.5rem] border border-white/15" />
               <span className="s2-line mt-3 block h-px w-full bg-[#efe0c2]/70" />
@@ -235,7 +222,7 @@ export default function ScrollyRail() {
             </motion.p>
           </article>
 
-          <article className="story-scene absolute inset-0 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-30 grid items-center p-6 md:p-10">
             <div data-media-slot className="relative h-[68vh] overflow-hidden rounded-[1.7rem] border border-white/14">
               <div className="s3-panel-a absolute inset-y-0 left-0 w-1/3 border-r border-white/10 bg-black/15" />
               <div className="s3-panel-b absolute inset-y-0 left-1/3 w-1/3 border-r border-white/10 bg-black/10" />
@@ -244,7 +231,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 grid items-center p-6 md:p-10 [perspective:1200px]">
+          <article className="story-scene absolute inset-0 z-40 grid items-center p-6 md:p-10 [perspective:1200px]">
             <div className="s4-stack mx-auto w-full max-w-4xl">
               <div className="s4-card-a rounded-3xl border border-white/15 bg-[#121212] p-6">Cacao · vainilla · crema tibia</div>
               <div className="s4-card-b -mt-7 ml-12 rounded-3xl border border-white/12 bg-[#151515] p-6">Brioche · noisette · sal marina</div>
@@ -253,7 +240,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-50 p-6 md:p-10">
             <div className="s5-spotlight relative grid h-full grid-cols-2 gap-3 rounded-[1.7rem] border border-white/14 bg-white/[0.03] p-4 [--mx:50%] [--my:50%] md:grid-cols-4">
               <div className="pointer-events-none absolute inset-0 rounded-[1.7rem]" style={{ background: isMobile || isReduced ? "none" : "radial-gradient(circle at var(--mx) var(--my), rgba(239,224,194,0.14), transparent 40%)" }} />
               <div data-media-slot className="col-span-2 row-span-2 overflow-hidden rounded-[1.3rem] border border-white/16" />
@@ -272,20 +259,20 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 overflow-hidden p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-60 overflow-hidden p-6 md:p-10">
             <div className="h-full overflow-hidden rounded-[1.8rem] border border-white/12 bg-[#0e0e0e] p-4">
               <div ref={filmTrackRef} className="flex w-max gap-4">
                 <div data-media-slot className="s6-item h-[64vh] w-[66vw] overflow-hidden rounded-[1.3rem] border border-white/16 md:w-[30vw]" />
                 {sceneSet.slice(1, 7).map((img, idx) => (
                   <div key={img} className="s6-item group relative h-[64vh] w-[66vw] overflow-hidden rounded-[1.3rem] border border-white/12 md:w-[30vw]">
-                    <img src={img} alt="Gallery item" className="h-full w-full object-cover" style={{ transform: `translateY(${idx % 2 === 0 ? "-1.5%" : "1.5%"}) scale(1.06)` }} />
+                    <Image src={img} alt="Gallery item" fill className="h-full w-full object-cover" sizes="(max-width: 768px) 66vw, 30vw" style={{ transform: `translateY(${idx % 2 === 0 ? "-1.5%" : "1.5%"}) scale(1.06)` }} priority={idx < 2} unoptimized />
                   </div>
                 ))}
               </div>
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-70 grid items-center p-6 md:p-10">
             <div className="mx-auto grid w-full max-w-5xl gap-8 md:grid-cols-[1fr_1.1fr]">
               <div data-media-slot className="h-[52vh] overflow-hidden rounded-[1.4rem] border border-white/14 opacity-70" />
               <div>
@@ -301,7 +288,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-80 grid items-center p-6 md:p-10">
             <div data-media-slot className="absolute inset-4 overflow-hidden rounded-[2rem] border border-white/10 opacity-35 md:inset-8" />
             <div className="s8-glass relative mx-auto w-full max-w-3xl rounded-[2rem] border border-white/22 bg-white/[0.09] p-8 text-center backdrop-blur-[18px] md:p-12">
               <p className="text-[11px] uppercase tracking-[0.22em] text-[#efe0c2]/82">Último pase</p>
@@ -317,7 +304,7 @@ export default function ScrollyRail() {
           </article>
 
           <div ref={sharedMediaRef} className="sharedMedia absolute left-0 top-0 h-full w-full overflow-hidden rounded-[inherit] border border-white/12 bg-[#0c0c0c] will-change-transform">
-            <img src={sceneSet[0]} alt="Hero media" className="h-full w-full object-cover" />
+            <Image src={sharedMediaSrc} alt="Hero media" fill sizes="100vw" className="h-full w-full object-cover" priority unoptimized />
           </div>
         </div>
       </div>

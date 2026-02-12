@@ -27,16 +27,17 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     if (!window.Lenis || !window.gsap || !window.ScrollTrigger) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const { gsap, ScrollTrigger } = setupGSAP();
+    const { ScrollTrigger } = setupGSAP();
 
     const lenis = new window.Lenis({
-      duration: reducedMotion ? 0 : 1.1,
-      lerp: reducedMotion ? 1 : 0.085,
+      duration: reducedMotion ? 0 : 1.5,
+      lerp: reducedMotion ? 1 : 0.08,
       smoothWheel: !reducedMotion,
       smoothTouch: !reducedMotion,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.2,
+      touchMultiplier: 1.08,
+      wheelMultiplier: 0.88,
       infinite: false,
+      autoRaf: false,
       easing: (t: number) => 1 - Math.pow(1 - t, 4),
     });
 
@@ -45,19 +46,20 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     const syncScroll = () => ScrollTrigger.update();
     lenis.on("scroll", syncScroll);
 
+    let rafId = 0;
     const raf = (time: number) => {
-      lenis.raf(time * 1000);
+      lenis.raf(time);
+      rafId = window.requestAnimationFrame(raf);
     };
 
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
+    rafId = window.requestAnimationFrame(raf);
 
     const onAnchorRequest = (event: Event) => {
       const customEvent = event as CustomEvent<{ target: string }>;
       const selector = customEvent.detail?.target;
       if (!selector) return;
       const target = document.querySelector(selector);
-      if (target) lenis.scrollTo(target, { duration: reducedMotion ? 0 : 1.2 });
+      if (target) lenis.scrollTo(target, { duration: reducedMotion ? 0 : 1.3 });
     };
 
     window.addEventListener("lenis:scroll-to", onAnchorRequest as EventListener);
@@ -65,7 +67,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     return () => {
       window.removeEventListener("lenis:scroll-to", onAnchorRequest as EventListener);
       lenis.off("scroll", syncScroll);
-      gsap.ticker.remove(raf);
+      window.cancelAnimationFrame(rafId);
       lenis.destroy();
       if (window.__lenis === lenis) delete window.__lenis;
     };

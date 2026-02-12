@@ -13,7 +13,7 @@ export default function Dock() {
           </a>
         </li>
         <li>
-          <a data-cursor="link" data-magnet href="#menu" className="block rounded-full py-3 transition hover:bg-white/10">
+          <a data-cursor="link" data-magnet href="#bento" className="block rounded-full py-3 transition hover:bg-white/10">
             Carta / Encargar
           </a>
         </li>

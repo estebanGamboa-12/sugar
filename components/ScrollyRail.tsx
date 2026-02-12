@@ -151,7 +151,7 @@ export default function ScrollyRail() {
         style={{ clipPath: "inset(7% 8% 7% 8% round 2rem)" }}
       >
         <article className="story-scene scene-1 absolute inset-0 p-6 md:p-10">
-          <img src="https://images.unsplash.com/photo-1464306076886-debca5e8a6b0?auto=format&fit=crop&w=1800&q=80" alt="Hero editorial" className="h-full w-full rounded-[1.8rem] object-cover" />
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Hero editorial" className="h-full w-full rounded-[1.8rem] object-cover" />
           <div className="focus-vignette absolute inset-0 opacity-0" style={{ background: "radial-gradient(circle at center, transparent 10%, rgba(0,0,0,0.72) 75%)" }} />
           <div className="hero-title-wrap absolute bottom-10 left-6 md:left-10">
             <motion.p animate={{ y: [0, -6, 0], opacity: [0.92, 1, 0.88] }} transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }} className="text-sm tracking-[0.2em] text-white/80">
@@ -163,7 +163,7 @@ export default function ScrollyRail() {
         <article className="story-scene scene-2 absolute inset-0 grid items-center p-6 md:grid-cols-12 md:p-10">
           <div className="md:col-span-8">
             <div className="slice-reveal h-[68vh] overflow-hidden rounded-[1.6rem] border border-white/15">
-              <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=1800&q=80" alt="Diagonal reveal" className="h-full w-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Diagonal reveal" className="h-full w-full object-cover" />
             </div>
             <span className="slice-line mt-3 block h-px w-full bg-[#ead8b8]/70" />
           </div>

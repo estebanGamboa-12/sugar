@@ -8,9 +8,10 @@ type RevealProps = {
   className?: string;
   rounded?: string;
   from?: "bottom" | "left" | "right";
+  delay?: number;
 };
 
-export default function Reveal({ children, className = "", rounded = "1.5rem", from = "bottom" }: RevealProps) {
+export default function Reveal({ children, className = "", rounded = "1.5rem", from = "bottom", delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -22,11 +23,11 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
 
     const fromVars =
       from === "left"
-        ? { x: -30, clipPath: `inset(0% 0% 0% 100% round ${rounded})` }
+        ? { x: -36, clipPath: `inset(0% 0% 0% 100% round ${rounded})` }
         : from === "right"
-          ? { x: 30, clipPath: `inset(0% 100% 0% 0% round ${rounded})` }
+          ? { x: 36, clipPath: `inset(0% 100% 0% 0% round ${rounded})` }
           : {
-              y: 30,
+              y: 34,
               clipPath: isMobile ? `inset(0% 0% 0% 0% round ${rounded})` : `inset(0% 0% 100% 0% round ${rounded})`,
             };
 
@@ -35,7 +36,7 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
         node,
         {
           opacity: 0,
-          scale: 0.99,
+          scale: 0.985,
           ...fromVars,
         },
         {
@@ -44,7 +45,8 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
           y: 0,
           scale: 1,
           clipPath: `inset(0% 0% 0% 0% round ${rounded})`,
-          duration: 0.82,
+          duration: 0.9,
+          delay,
           ease: "power2.out",
           scrollTrigger: {
             trigger: node,
@@ -56,11 +58,7 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
     }, node);
 
     return () => ctx.revert();
-  }, [rounded, from]);
+  }, [rounded, from, delay]);
 
-  return (
-    <div ref={ref} className={className}>
-      {children}
-    </div>
-  );
+  return <div ref={ref} className={className}>{children}</div>;
 }

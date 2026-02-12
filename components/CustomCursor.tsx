@@ -3,6 +3,9 @@
 import { useEffect, useRef } from "react";
 import { getGSAP } from "@/lib/gsap";
 
+const MAGNET_SELECTOR = "[data-magnet]";
+const CURSOR_SELECTOR = "[data-cursor], [data-magnet]";
+
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
 
@@ -16,59 +19,70 @@ export default function CustomCursor() {
     }
 
     const { gsap } = getGSAP();
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.24, ease: "power3.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.24, ease: "power3.out" });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.22, ease: "power3.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.22, ease: "power3.out" });
+
+    const magnetMap = new WeakMap<Element, { qx: (v: number) => void; qy: (v: number) => void }>();
+
+    const getMagnetTweens = (el: Element) => {
+      if (!magnetMap.has(el)) {
+        magnetMap.set(el, {
+          qx: gsap.quickTo(el, "x", { duration: 0.32, ease: "power3.out" }),
+          qy: gsap.quickTo(el, "y", { duration: 0.32, ease: "power3.out" }),
+        });
+      }
+      return magnetMap.get(el)!;
+    };
+
+    const findTarget = (target: EventTarget | null) => (target instanceof Element ? target.closest(CURSOR_SELECTOR) : null);
 
     const onMove = (e: MouseEvent) => {
       xTo(e.clientX - 12);
       yTo(e.clientY - 12);
+
+      const magnetEl = (e.target instanceof Element ? e.target.closest(MAGNET_SELECTOR) : null) as HTMLElement | null;
+      if (!magnetEl) return;
+      const { qx, qy } = getMagnetTweens(magnetEl);
+      const rect = magnetEl.getBoundingClientRect();
+      const mx = (e.clientX - (rect.left + rect.width / 2)) * 0.13;
+      const my = (e.clientY - (rect.top + rect.height / 2)) * 0.13;
+      qx(mx);
+      qy(my);
     };
 
-    const cleanups: Array<() => void> = [];
+    const onOver = (e: MouseEvent) => {
+      const target = findTarget(e.target);
+      if (!target) return;
+      cursor.classList.add("is-hover");
+      cursor.dataset.mode = target.getAttribute("data-cursor") || "hover";
+    };
 
-    document.querySelectorAll('[data-cursor], [data-magnet]').forEach((el) => {
-      const qx = gsap.quickTo(el, "x", { duration: 0.32, ease: "power3.out" });
-      const qy = gsap.quickTo(el, "y", { duration: 0.32, ease: "power3.out" });
+    const onOut = (e: MouseEvent) => {
+      const from = findTarget(e.target);
+      if (!from) return;
+      const related = findTarget(e.relatedTarget);
+      if (related === from) return;
 
-      const onEnter = () => {
-        const mode = (el as HTMLElement).getAttribute("data-cursor") || "hover";
-        cursor.dataset.mode = mode;
-        cursor.classList.add("is-hover");
-      };
-
-      const onLeave = () => {
-        cursor.classList.remove("is-hover");
-        delete cursor.dataset.mode;
+      if (from.matches(MAGNET_SELECTOR)) {
+        const { qx, qy } = getMagnetTweens(from);
         qx(0);
         qy(0);
-      };
+      }
 
-      const onMagnetMove = (event: Event) => {
-        if (!(el instanceof HTMLElement) || !el.hasAttribute("data-magnet")) return;
-        const e = event as MouseEvent;
-        const rect = el.getBoundingClientRect();
-        const mx = (e.clientX - (rect.left + rect.width / 2)) * 0.14;
-        const my = (e.clientY - (rect.top + rect.height / 2)) * 0.14;
-        qx(mx);
-        qy(my);
-      };
-
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-      el.addEventListener("mousemove", onMagnetMove);
-
-      cleanups.push(() => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-        el.removeEventListener("mousemove", onMagnetMove);
-      });
-    });
+      if (!related) {
+        cursor.classList.remove("is-hover");
+        delete cursor.dataset.mode;
+      }
+    };
 
     window.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseover", onOver);
+    document.addEventListener("mouseout", onOut);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
-      cleanups.forEach((cleanup) => cleanup());
+      document.removeEventListener("mouseover", onOver);
+      document.removeEventListener("mouseout", onOut);
     };
   }, []);
 

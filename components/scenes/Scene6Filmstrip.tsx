@@ -3,12 +3,12 @@ import { SceneShell } from '@/components/ui/SceneShell';
 import { FilmstripItem } from '@/components/ui/FilmstripItem';
 
 const frames = [
-  '/images/noir/scene-1.jpg',
-  '/images/noir/scene-2.jpg',
-  '/images/noir/scene-3.jpg',
-  '/images/noir/scene-4.jpg',
-  '/images/noir/scene-5.jpg',
-  '/images/noir/scene-6.jpg'
+  '/images/noir/scene-1.svg',
+  '/images/noir/scene-2.svg',
+  '/images/noir/scene-3.svg',
+  '/images/noir/scene-4.svg',
+  '/images/noir/scene-5.svg',
+  '/images/noir/scene-6.svg'
 ];
 
 export function Scene6Filmstrip({ sectionRef, trackRef }: { sectionRef: React.RefObject<HTMLElement | null>; trackRef: React.RefObject<HTMLDivElement | null> }) {

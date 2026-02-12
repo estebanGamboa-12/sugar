@@ -1,22 +1,67 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+const dockItems = [
+  { label: "Story", href: "#story-rail", key: "story" },
+  { label: "Reservar", href: "#faq", key: "faq" },
+  { label: "Carta / Encargar", href: "#bento", key: "bento" },
+];
+
 export default function Dock() {
+  const [active, setActive] = useState("story");
+
+  useEffect(() => {
+    let railActive = false;
+
+    const onRail = (event: Event) => {
+      const detail = (event as CustomEvent<{ active: boolean }>).detail;
+      railActive = Boolean(detail?.active);
+      if (railActive) setActive("story");
+    };
+
+    const onScroll = () => {
+      if (railActive) return;
+      const sections = ["bento", "faq", "about"] as const;
+      const winner = sections.find((id) => {
+        const element = document.getElementById(id);
+        if (!element) return false;
+        const rect = element.getBoundingClientRect();
+        return rect.top < window.innerHeight * 0.45 && rect.bottom > window.innerHeight * 0.2;
+      });
+
+      if (winner) {
+        setActive(winner === "about" ? "story" : winner);
+      }
+    };
+
+    window.addEventListener("rail-active", onRail as EventListener);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.removeEventListener("rail-active", onRail as EventListener);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
     <nav className="fixed bottom-4 left-1/2 z-50 w-[min(96vw,560px)] -translate-x-1/2 rounded-full border border-white/20 bg-black/70 p-2 backdrop-blur-md">
       <ul className="grid grid-cols-3 gap-2 text-center text-[10px] uppercase tracking-[0.22em] text-white/86">
-        <li>
-          <a data-cursor="link" data-magnet href="#about" className="block rounded-full py-3 transition hover:bg-white/10">
-            Brand
-          </a>
-        </li>
-        <li>
-          <a data-cursor="link" data-magnet href="#faq" className="block rounded-full py-3 transition hover:bg-white/10">
-            Reservar
-          </a>
-        </li>
-        <li>
-          <a data-cursor="link" data-magnet href="#bento" className="block rounded-full py-3 transition hover:bg-white/10">
-            Carta / Encargar
-          </a>
-        </li>
+        {dockItems.map((item) => (
+          <li key={item.key}>
+            <a
+              data-cursor="link"
+              data-magnet
+              href={item.href}
+              className={`block rounded-full py-3 transition ${
+                active === item.key ? "bg-white/16 text-white" : "hover:bg-white/10"
+              }`}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
       </ul>
     </nav>
   );

@@ -1,22 +1,57 @@
 "use client";
 
+type GSAPTimeline = {
+  to: (target: unknown, vars?: Record<string, unknown>, position?: string) => GSAPTimeline;
+  fromTo: (
+    target: unknown,
+    fromVars: Record<string, unknown>,
+    toVars: Record<string, unknown>,
+    position?: string,
+  ) => GSAPTimeline;
+};
+
+type GSAPWindow = {
+  registerPlugin: (plugin: unknown) => void;
+  ticker: {
+    add: (callback: (time: number) => void) => void;
+    remove: (callback: (time: number) => void) => void;
+    lagSmoothing: (threshold: number, adjustedLag?: number) => void;
+  };
+  utils: { toArray: (selector: string) => Element[] };
+  context: (fn: () => void, scope?: unknown) => { revert: () => void };
+  set: (targets: unknown, vars: Record<string, unknown>) => void;
+  timeline: (vars: Record<string, unknown>) => GSAPTimeline;
+  quickTo: (target: Element, prop: string, vars: Record<string, unknown>) => (value: number) => void;
+  fromTo: (
+    target: unknown,
+    fromVars: Record<string, unknown>,
+    toVars: Record<string, unknown>,
+    position?: string,
+  ) => GSAPTimeline;
+};
+
+type ScrollTriggerWindow = {
+  update: () => void;
+  refresh: () => void;
+};
+
 declare global {
   interface Window {
-    gsap: any;
-    ScrollTrigger: any;
+    gsap: GSAPWindow;
+    ScrollTrigger: ScrollTriggerWindow;
   }
 }
 
-let registered = false;
+let pluginRegistered = false;
 
 export function getGSAP() {
   if (!window.gsap || !window.ScrollTrigger) {
-    throw new Error("GSAP no está disponible en window.");
+    throw new Error("GSAP/ScrollTrigger no están disponibles en window.");
   }
 
-  if (!registered) {
+  if (!pluginRegistered) {
     window.gsap.registerPlugin(window.ScrollTrigger);
-    registered = true;
+    pluginRegistered = true;
   }
 
   return { gsap: window.gsap, ScrollTrigger: window.ScrollTrigger };

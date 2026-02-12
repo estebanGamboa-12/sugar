@@ -14,37 +14,32 @@ declare global {
   }
 }
 
-type SmoothScrollProps = {
-  children: ReactNode;
-};
-
-export default function SmoothScroll({ children }: SmoothScrollProps) {
+export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced || !window.Lenis || !window.gsap || !window.ScrollTrigger) return;
+    if (!window.Lenis || !window.gsap || !window.ScrollTrigger) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const { gsap, ScrollTrigger } = getGSAP();
 
     const lenis = new window.Lenis({
       autoRaf: false,
-      duration: 1.1,
+      duration: 1.15,
       smoothWheel: true,
       smoothTouch: false,
     });
-
-    const onLenisScroll = () => ScrollTrigger.update();
-    lenis.on("scroll", onLenisScroll);
 
     const tick = (time: number) => {
       lenis.raf(time * 1000);
     };
 
+    lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
+    requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => {
       gsap.ticker.remove(tick);
-      lenis.off("scroll", onLenisScroll);
+      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
     };
   }, []);

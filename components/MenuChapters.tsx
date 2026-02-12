@@ -69,7 +69,7 @@ export default function MenuChapters() {
           scrub: true,
           pin: true,
           anticipatePin: 1,
-          onUpdate: (self) => {
+          onUpdate: (self: any) => {
             const nextIndex = Math.min(chapters.length - 1, Math.floor(self.progress * chapters.length));
             setActiveIndex(nextIndex);
           },

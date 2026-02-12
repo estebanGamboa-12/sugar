@@ -2,33 +2,24 @@
 
 declare global {
   interface Window {
-    gsap: {
-      registerPlugin: (...args: unknown[]) => void;
-      context: (callback: () => void, scope?: Element | null) => { revert: () => void };
-      timeline: (vars: Record<string, unknown>) => {
-        to: (target: unknown, vars: Record<string, unknown>, position?: number) => unknown;
-      };
-      fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>) => unknown;
-      ticker: {
-        add: (cb: (time: number) => void) => void;
-        remove: (cb: (time: number) => void) => void;
-        lagSmoothing: (threshold: number) => void;
-      };
-    };
-    ScrollTrigger: {
-      update: () => void;
-      getAll: () => Array<{ kill: () => void }>;
-    };
+    gsap: any;
+    ScrollTrigger: any;
   }
 }
 
-let pluginRegistered = false;
+let registered = false;
 
-export const setupGSAP = () => {
-  if (!pluginRegistered && typeof window !== "undefined" && window.gsap && window.ScrollTrigger) {
+export function getGSAP() {
+  if (!window.gsap || !window.ScrollTrigger) {
+    throw new Error("GSAP no está disponible en window.");
+  }
+
+  if (!registered) {
     window.gsap.registerPlugin(window.ScrollTrigger);
-    pluginRegistered = true;
+    registered = true;
   }
 
   return { gsap: window.gsap, ScrollTrigger: window.ScrollTrigger };
-};
+}
+
+export const setupGSAP = getGSAP;

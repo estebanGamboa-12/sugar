@@ -1,25 +1,12 @@
 import type { Metadata } from "next";
-import { Manrope, Playfair_Display } from "next/font/google";
 import Script from "next/script";
-import Cursor from "@/components/Cursor";
+import CustomCursor from "@/components/CustomCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-manrope",
-  display: "swap",
-});
-
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-display-serif",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "The Sugar Lab · Immersive Experience",
-  description: "Landing page experiencial con scrollytelling, parallax y galería horizontal inspirada en Awwwards.",
+  title: "Atelier Sucre — Editorial Dining",
+  description: "Landing minimal y premium para pastelería/restaurante con Lenis + GSAP + Framer Motion.",
 };
 
 export default function RootLayout({
@@ -29,12 +16,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${manrope.variable} ${playfairDisplay.variable} bg-black text-[#F1F1F1] antialiased`}>
-        <Script src="https://unpkg.com/lenis@1.3.13/dist/lenis.min.js" strategy="beforeInteractive" />
+      <body className="bg-black text-white antialiased">
         <Script src="https://unpkg.com/gsap@3.13.0/dist/gsap.min.js" strategy="beforeInteractive" />
         <Script src="https://unpkg.com/gsap@3.13.0/dist/ScrollTrigger.min.js" strategy="beforeInteractive" />
-        <Cursor />
-        <SmoothScroll>{children}</SmoothScroll>
+        <Script src="https://unpkg.com/lenis@1.3.13/dist/lenis.min.js" strategy="beforeInteractive" />
+        <SmoothScroll>
+          <CustomCursor />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -40,7 +40,7 @@ export default function HorizontalGallery() {
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-58%"]);
 
   return (
-    <section ref={sectionRef} className="relative bg-[#0b0908] py-20 text-[#f8f3ec] md:h-[300vh] md:py-0">
+    <section ref={sectionRef} className="relative bg-[#0b0908] py-20 text-[#f8f3ec] md:h-[360vh] md:py-0">
       <div className="mx-auto mb-10 max-w-6xl px-6 md:mb-0 md:px-10 md:pt-24">
         <p className="text-xs uppercase tracking-[0.35em] text-[#c6a77f]">The Lab</p>
         <h2 className="mt-4 max-w-2xl font-[family-name:var(--font-display-serif)] text-4xl leading-tight md:text-6xl">

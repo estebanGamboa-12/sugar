@@ -1,134 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+  box-sizing: border-box;
+}
 
-:root {
-  color-scheme: dark;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, Arial, sans-serif;
 }
 
 body {
-  background: #070707;
-}
-
-.split-word {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-
-.split-word-inner {
-  display: inline-block;
-  will-change: transform, filter, opacity;
-}
-
-.noise-overlay {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 0.6px, transparent 0.6px);
-  background-size: 3px 3px;
-  mix-blend-mode: soft-light;
-  opacity: 0.15;
-  animation: grain 0.2s steps(2) infinite;
-}
-
-.vignette-overlay {
-  background: radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.82) 100%);
-}
-
-.light-leak {
-  background: linear-gradient(120deg, transparent 0%, rgba(161, 20, 59, 0.2) 38%, transparent 65%);
-  mix-blend-mode: screen;
-  opacity: 0.4;
-}
-
-.filmstrip-mask {
-  position: relative;
-}
-
-.filmstrip-mask::before,
-.filmstrip-mask::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  z-index: 2;
-  height: 100%;
-  width: 120px;
-  pointer-events: none;
-}
-
-.filmstrip-mask::before {
-  left: 0;
-  background: linear-gradient(to right, #070707, transparent);
-}
-
-.filmstrip-mask::after {
-  right: 0;
-  background: linear-gradient(to left, #070707, transparent);
-}
-
-.filmstrip-item::before,
-.filmstrip-item::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background-image: repeating-linear-gradient(to right, #070707 0 12px, transparent 12px 22px);
-  z-index: 2;
-}
-
-.filmstrip-item::before {
-  top: 0;
-}
-
-.filmstrip-item::after {
-  bottom: 0;
-}
-
-.sheen-button::before {
-  content: '';
-  position: absolute;
-  inset: -140% -10%;
-  background: linear-gradient(100deg, transparent 35%, rgba(255, 255, 255, 0.5) 50%, transparent 65%);
-  transform: translateX(-100%) rotate(12deg);
-  animation: sheen 3.8s infinite;
-}
-
-@keyframes sheen {
-  100% {
-    transform: translateX(100%) rotate(12deg);
-  }
-}
-
-@keyframes grain {
-  0% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(-1%, 1%);
-  }
-  50% {
-    transform: translate(1%, -1%);
-  }
-  75% {
-    transform: translate(1%, 1%);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@supports not (mix-blend-mode: screen) {
-  .light-leak {
-    opacity: 0.14;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+  background: #ffffff;
+  color: #111827;
 }

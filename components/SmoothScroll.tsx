@@ -3,28 +3,26 @@
 import { ReactNode, useEffect } from "react";
 import { getGSAP } from "@/lib/gsap";
 
+type LenisInstance = {
+  on: (event: "scroll", callback: () => void) => void;
+  off: (event: "scroll", callback: () => void) => void;
+  raf: (time: number) => void;
+  scrollTo: (target: number | string | Element, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void;
+  destroy: () => void;
+};
+
 declare global {
   interface Window {
-    Lenis: new (options: Record<string, unknown>) => {
-      on: (event: "scroll", callback: () => void) => void;
-      off: (event: "scroll", callback: () => void) => void;
-      raf: (time: number) => void;
-      scrollTo: (target: number | string | Element, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void;
-      destroy: () => void;
-    };
-    __lenis?: {
-      scrollTo: (target: number, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void;
-    };
+    Lenis: new (options: Record<string, unknown>) => LenisInstance;
+    __lenis?: LenisInstance;
   }
 }
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!window.Lenis || !window.gsap || !window.ScrollTrigger) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const { gsap, ScrollTrigger } = getGSAP();
-
     const lenis = new window.Lenis({
       autoRaf: false,
       duration: 1.15,
@@ -33,10 +31,9 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     });
 
     const refresh = () => ScrollTrigger.refresh();
-
-    lenis.on("scroll", ScrollTrigger.update);
     const tickerCallback = (time: number) => lenis.raf(time * 1000);
 
+    lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
     window.__lenis = lenis;

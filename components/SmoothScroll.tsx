@@ -32,14 +32,20 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       lenis.raf(time * 1000);
     };
 
+    const refresh = () => ScrollTrigger.refresh();
+
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
+    document.fonts?.ready.then(refresh);
+    window.addEventListener("load", refresh);
+
     return () => {
       gsap.ticker.remove(tick);
       lenis.off("scroll", ScrollTrigger.update);
+      window.removeEventListener("load", refresh);
       lenis.destroy();
     };
   }, []);

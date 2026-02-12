@@ -18,76 +18,140 @@ export default function ScrollyRail() {
   const sectionRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const portraitRevealRef = useRef<HTMLDivElement>(null);
+  const signatureRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
-  const titleY = useTransform(scrollYProgress, [0, 0.4], [0, -80]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0.55]);
+
+  const heroTitleY = useTransform(scrollYProgress, [0, 0.12, 0.2], [26, 0, -22]);
+  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.12, 0.2], [0.2, 1, 0.7]);
+
+  const portraitTitleY = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [24, 0, -18]);
+  const portraitTitleOpacity = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [0.25, 1, 0.72]);
+
+  const dishTitleY = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [20, 0, -14]);
+  const dishTitleOpacity = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [0.25, 1, 0.75]);
+
+  const bentoTitleY = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [20, 0, -14]);
+  const bentoTitleOpacity = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [0.25, 1, 0.75]);
+
+  const galleryTitleY = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [20, 0, -14]);
+  const galleryTitleOpacity = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [0.25, 1, 0.75]);
+
+  const ctaTitleY = useTransform(scrollYProgress, [0.83, 0.94, 1], [24, 0, -12]);
+  const ctaTitleOpacity = useTransform(scrollYProgress, [0.83, 0.94, 1], [0.3, 1, 0.95]);
 
   useLayoutEffect(() => {
     const root = sectionRef.current;
-    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!root) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
     const { gsap, ScrollTrigger } = getGSAP();
 
     const ctx = gsap.context(() => {
-      gsap.set(".scene", { autoAlpha: 0 });
-      gsap.set(".scene-1", { autoAlpha: 1 });
+      if (reduceMotion) {
+        gsap.set(".scene", { clearProps: "all", autoAlpha: 1, pointerEvents: "auto" });
+        return;
+      }
+
+      gsap.set(".scene", { autoAlpha: 0, pointerEvents: "none", y: 16, scale: 0.985 });
+      gsap.set(".scene-1", { autoAlpha: 1, pointerEvents: "auto", y: 0, scale: 1 });
 
       const tl = gsap.timeline({
         defaults: { ease: "power2.inOut" },
         scrollTrigger: {
           trigger: root,
           start: "top top",
-          end: "+=600%",
+          end: "+=900%",
           pin: true,
           scrub: 1,
           markers: SHOW_MARKERS,
           invalidateOnRefresh: true,
+          anticipatePin: 1,
         },
       });
 
-      tl.to(frameRef.current, { scale: 1.25, clipPath: "inset(0% 0% 0% 0% round 0rem)", borderRadius: 0, duration: 1 });
+      const tlWithLabels = tl as unknown as { addLabel: (name: string, position?: string) => void };
 
-      tl.to(".scene-1", { autoAlpha: 0, duration: 0.45 }, ">")
-        .to(".scene-2", { autoAlpha: 1, duration: 0.45 }, "<")
-        .fromTo(
-          portraitRevealRef.current,
-          { clipPath: "inset(100% 0% 0% 0%)", yPercent: 8 },
-          { clipPath: "inset(0% 0% 0% 0%)", yPercent: 0, duration: 0.8 },
-          "<",
-        )
-        .fromTo(".diagonal-line", { scaleX: 0 }, { scaleX: 1, transformOrigin: "left center", duration: 0.6 }, "<0.1")
-        .to(".scene-2", { autoAlpha: 0, duration: 0.45 }, "+=0.8")
-        .to(".scene-3", { autoAlpha: 1, duration: 0.45 }, "<")
-        .fromTo(
-          ".bento-card",
-          { autoAlpha: 0, y: 60, clipPath: "inset(0% 0% 100% 0% round 1.2rem)" },
-          {
-            autoAlpha: 1,
-            y: 0,
-            clipPath: "inset(0% 0% 0% 0% round 1.2rem)",
-            stagger: 0.08,
-            duration: 0.55,
-          },
-          "<0.1",
-        )
-        .to(".scene-3", { autoAlpha: 0, duration: 0.45 }, "+=0.9")
-        .to(".scene-4", { autoAlpha: 1, duration: 0.45 }, "<")
-        .fromTo(
-          ".gallery-item",
-          { clipPath: "inset(0% 0% 100% 0% round 1.3rem)", y: 45 },
-          { clipPath: "inset(0% 0% 0% 0% round 1.3rem)", y: 0, duration: 0.8, stagger: 0.13 },
-          "<",
-        )
-        .to(".scene-4", { autoAlpha: 0, duration: 0.45 }, "+=0.8")
-        .to(".scene-5", { autoAlpha: 1, duration: 0.45 }, "<")
-        .fromTo(".quote-item", { y: 34, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.2, duration: 0.6 }, "<0.1")
-        .to(".scene-5", { autoAlpha: 0, duration: 0.45 }, "+=0.9")
-        .to(".scene-6", { autoAlpha: 1, duration: 0.45 }, "<")
-        .fromTo(".cta-item", { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.15, duration: 0.55 }, "<0.1");
+      const transitionTo = (outgoing: string, incoming: string, at: string) => {
+        tl.to(outgoing, { autoAlpha: 0, y: -16, scale: 1.015, pointerEvents: "none", duration: 0.42 }, at)
+          .fromTo(
+            incoming,
+            { autoAlpha: 0, y: 16, scale: 0.985, pointerEvents: "none" },
+            { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 0.48 },
+            "<",
+          );
+      };
 
-      ScrollTrigger.refresh();
+      tlWithLabels.addLabel("scene-1")
+      tl
+        .to(frameRef.current, {
+          scale: isMobile ? 1.08 : 1.25,
+          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.2rem)" : "inset(0% 0% 0% 0% round 0rem)",
+          borderRadius: isMobile ? "1.2rem" : 0,
+          duration: 1.1,
+        })
+        .to(".hero-vignette", { opacity: 0.14, duration: 0.8 }, "<")
+        ;
+      tlWithLabels.addLabel("scene-2", "+=0.45");
+
+      transitionTo(".scene-1", ".scene-2", "scene-2");
+      tl.fromTo(
+        portraitRevealRef.current,
+        { clipPath: isMobile ? "inset(8% 8% 8% 8% round 1.6rem)" : "inset(100% 0% 0% 0%)", yPercent: isMobile ? 0 : 8 },
+        { clipPath: "inset(0% 0% 0% 0%)", yPercent: 0, duration: 0.9 },
+        "<0.08",
+      )
+        .fromTo(".diagonal-line", { scaleX: 0 }, { scaleX: 1, transformOrigin: "left center", duration: 0.55 }, "<0.12")
+        ;
+      tlWithLabels.addLabel("scene-3", "+=0.7");
+
+      transitionTo(".scene-2", ".scene-3", "scene-3");
+      tl.fromTo(signatureRef.current, { scale: 1.05 }, { scale: 1, duration: 1 }, "<")
+        .fromTo(".dish-caption", { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.6 }, "<0.15")
+        ;
+      tlWithLabels.addLabel("scene-4", "+=0.72");
+
+      transitionTo(".scene-3", ".scene-4", "scene-4");
+      tl.fromTo(
+        ".bento-card",
+        {
+          autoAlpha: 0,
+          y: 44,
+          scale: 0.96,
+          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.2rem)" : "inset(0% 0% 100% 0% round 1.2rem)",
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          clipPath: "inset(0% 0% 0% 0% round 1.2rem)",
+          stagger: 0.08,
+          duration: 0.5,
+        },
+        "<0.08",
+      );
+      tlWithLabels.addLabel("scene-5", "+=0.65");
+
+      transitionTo(".scene-4", ".scene-5", "scene-5");
+      tl.fromTo(
+        ".gallery-item",
+        {
+          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.3rem)" : "inset(0% 0% 100% 0% round 1.3rem)",
+          y: 35,
+          autoAlpha: 0,
+        },
+        { clipPath: "inset(0% 0% 0% 0% round 1.3rem)", y: 0, autoAlpha: 1, duration: 0.72, stagger: 0.12 },
+        "<",
+      );
+      tlWithLabels.addLabel("scene-6", "+=0.72");
+
+      transitionTo(".scene-5", ".scene-6", "scene-6");
+      tl.fromTo(".cta-item", { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.15, duration: 0.55 }, "<0.08");
     }, sectionRef);
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
 
     return () => ctx.revert();
   }, []);
@@ -102,7 +166,8 @@ export default function ScrollyRail() {
               alt="Postres de autor"
               className="h-full w-full object-cover"
             />
-            <motion.div style={{ y: titleY, opacity: titleOpacity }} className="absolute inset-x-0 top-[16%] px-6 md:px-12">
+            <div className="hero-vignette absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/30" />
+            <motion.div style={{ y: heroTitleY, opacity: heroTitleOpacity }} className="absolute inset-x-0 top-[16%] px-6 md:px-12">
               <p className="text-xs uppercase tracking-[0.28em] text-white/65">Story 01 — Hero Zoom</p>
               <h1 className="mt-4 font-display text-[clamp(3rem,14vw,14rem)] uppercase leading-[0.82]">Noir Atelier</h1>
             </motion.div>
@@ -120,16 +185,38 @@ export default function ScrollyRail() {
                 />
               </div>
             </div>
-            <div className="md:col-span-5 md:self-end">
+            <motion.div style={{ y: portraitTitleY, opacity: portraitTitleOpacity }} className="md:col-span-5 md:self-end">
               <div className="diagonal-line mb-8 h-px w-full rotate-[-18deg] bg-white/40" />
-              <p className="text-xs uppercase tracking-[0.25em] text-white/55">Lucía Ferrer · Creative Chef</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-white/55">Story 02 — Portrait Editorial</p>
+              <p className="mt-2 text-sm uppercase tracking-[0.2em] text-white/52">Lucía Ferrer · Creative Chef</p>
               <p className="mt-3 max-w-md text-2xl leading-tight text-white/88">“Cada plato es un encuadre. Cada textura, una línea en la narrativa.”</p>
-            </div>
+            </motion.div>
           </div>
         </article>
 
-        <article className="scene scene-3 absolute inset-0 px-6 py-14 md:px-10">
-          <h2 className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.88]">Bento Highlights</h2>
+        <article className="scene scene-3 absolute inset-0 grid items-center px-6 py-10 md:px-10">
+          <div className="grid items-end gap-6 md:grid-cols-12">
+            <div className="md:col-span-7">
+              <div ref={signatureRef} className="h-[70vh] overflow-hidden rounded-[2rem] border border-white/20">
+                <img
+                  src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1600&q=80"
+                  alt="Signature dish"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+            <motion.div style={{ y: dishTitleY, opacity: dishTitleOpacity }} className="dish-caption md:col-span-5 md:pb-12">
+              <p className="text-xs uppercase tracking-[0.25em] text-white/55">Story 03 — Signature Dish</p>
+              <h2 className="mt-4 font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[0.9]">Caramelo negro, cacao y flor de sal.</h2>
+              <p className="mt-4 max-w-md text-white/72">Texturas en capas, temperatura medida y un final seco para prolongar el recuerdo.</p>
+            </motion.div>
+          </div>
+        </article>
+
+        <article className="scene scene-4 absolute inset-0 px-6 py-14 md:px-10">
+          <motion.h2 style={{ y: bentoTitleY, opacity: bentoTitleOpacity }} className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.88]">
+            Story 04 — Bento Highlights
+          </motion.h2>
           <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-12">
             {bentoItems.map((item) => (
               <div key={item} className="bento-card rounded-[1.4rem] border border-white/15 bg-white/[0.05] p-5 md:col-span-4">
@@ -140,8 +227,10 @@ export default function ScrollyRail() {
           </div>
         </article>
 
-        <article className="scene scene-4 absolute inset-0 px-6 py-12 md:px-10">
-          <h2 className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.9]">Gallery Strip</h2>
+        <article className="scene scene-5 absolute inset-0 px-6 py-12 md:px-10">
+          <motion.h2 style={{ y: galleryTitleY, opacity: galleryTitleOpacity }} className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.9]">
+            Story 05 — Gallery Strip
+          </motion.h2>
           <div className="mt-8 grid h-[70vh] gap-4 md:grid-cols-12">
             {gallery.map((image, idx) => (
               <div key={image} className={`gallery-item overflow-hidden rounded-[1.4rem] border border-white/15 ${idx === 0 ? "md:col-span-5" : "md:col-span-3"}`}>
@@ -151,23 +240,9 @@ export default function ScrollyRail() {
           </div>
         </article>
 
-        <article className="scene scene-5 absolute inset-0 grid items-center px-6 md:px-10">
-          <div>
-            <h2 className="quote-item font-display text-[clamp(2.5rem,8vw,8rem)] leading-[0.88]">Voces de la mesa.</h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <blockquote className="quote-item rounded-3xl border border-white/15 bg-white/[0.04] p-6 text-xl text-white/88">
-                “La mejor secuencia de sabores que hemos probado este año.”
-              </blockquote>
-              <blockquote className="quote-item rounded-3xl border border-white/15 bg-white/[0.04] p-6 text-xl text-white/88">
-                “Ritmo perfecto entre sala, cocina y storytelling visual.”
-              </blockquote>
-            </div>
-          </div>
-        </article>
-
         <article className="scene scene-6 absolute inset-0 grid items-center px-6 text-center md:px-10">
-          <div className="mx-auto max-w-4xl">
-            <p className="cta-item text-xs uppercase tracking-[0.25em] text-white/55">Scene 06 · Final CTA</p>
+          <motion.div style={{ y: ctaTitleY, opacity: ctaTitleOpacity }} className="mx-auto max-w-4xl">
+            <p className="cta-item text-xs uppercase tracking-[0.25em] text-white/55">Story 06 · Final CTA</p>
             <h2 className="cta-item mt-5 font-display text-[clamp(2.8rem,9vw,9rem)] leading-[0.84]">¿Listo para tu próxima velada?</h2>
             <p className="cta-item mt-5 text-lg text-white/74">Últimas plazas para el próximo menú degustación y encargos boutique.</p>
             <div className="cta-item mt-8 flex flex-wrap justify-center gap-3">
@@ -178,7 +253,7 @@ export default function ScrollyRail() {
                 Encargar
               </button>
             </div>
-          </div>
+          </motion.div>
         </article>
       </div>
     </section>

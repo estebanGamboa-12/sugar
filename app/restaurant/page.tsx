@@ -1,4 +1,4 @@
-import RestaurantScrolly from '@/components/restaurant/RestaurantScrolly';
+import RestaurantScrolly from './RestaurantScrolly';
 
 export default function RestaurantPage() {
   return <RestaurantScrolly />;

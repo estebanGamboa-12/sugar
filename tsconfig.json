@@ -25,6 +25,15 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "framer-motion": [
+        "./lib/framer-motion"
+      ],
+      "gsap": [
+        "./lib/gsap"
+      ],
+      "gsap/ScrollTrigger": [
+        "./lib/gsap-scrolltrigger"
       ]
     }
   },

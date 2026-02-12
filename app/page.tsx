@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import HorizontalGallery from "@/components/HorizontalGallery";
@@ -10,18 +10,6 @@ import Philosophy from "@/components/Philosophy";
 
 export default function Page() {
   const mainRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    if ("scrollRestoration" in window.history) {
-      window.history.scrollRestoration = "manual";
-    }
-
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: mainRef,

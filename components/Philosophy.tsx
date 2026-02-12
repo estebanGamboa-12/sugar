@@ -54,10 +54,16 @@ export default function Philosophy() {
 
       <div className="hidden md:block">
         <div className="sticky top-0 flex h-screen items-center justify-center">
-          <div className="relative h-44 w-full">
+          <div className="relative w-full">
+            <div className="relative h-44">
             {statements.map((text, index) => (
               <PhraseLayer key={text} text={text} index={index} progress={scrollYProgress} />
             ))}
+            </div>
+
+            <p className="mt-8 text-center font-medium tracking-[0.08em] text-[#5e4430]">
+              {statements.join(" · ")}
+            </p>
           </div>
         </div>
       </div>

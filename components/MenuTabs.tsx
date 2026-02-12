@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import ParallaxImage from "@/components/ParallaxImage";
+import TextReveal from "@/components/TextReveal";
 
 const chapters = [
   {
@@ -43,34 +44,35 @@ const chapters = [
   },
 ];
 
-const easing = [0.22, 1, 0.36, 1];
+const easing: [number, number, number, number] = [0.33, 1, 0.68, 1];
 
 export default function MenuTabs() {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = chapters[activeIndex];
 
   const chapterNumber = useMemo(() => String(activeIndex + 1).padStart(2, "0"), [activeIndex]);
+  const editorialOffset = activeIndex % 2 === 0 ? "lg:mt-0" : "lg:mt-12";
 
   return (
-    <section id="carta" className="relative px-5 py-20 md:px-12 md:py-24">
-      <div className="mx-auto w-full max-w-6xl">
-        <nav className="mb-10 border-b border-cocoa/20 pb-4 md:mb-14">
-          <ul className="flex flex-wrap gap-x-7 gap-y-4">
+    <section id="carta" className="relative px-5 py-20 md:px-12 md:py-28">
+      <div className="mx-auto w-full max-w-7xl">
+        <nav className="mb-12 border-b border-cocoa/20 pb-5 md:mb-16">
+          <ul className="flex flex-wrap gap-x-8 gap-y-5">
             {chapters.map((chapter, index) => {
               const isActive = index === activeIndex;
               return (
-                <li key={chapter.id}>
+                <li key={chapter.id} className={index % 2 === 0 ? "md:translate-y-0" : "md:translate-y-1"}>
                   <button
                     type="button"
                     onClick={() => setActiveIndex(index)}
-                    className="relative pb-2 text-xs uppercase tracking-[0.2em] text-cocoa/70 transition-colors hover:text-cocoa"
+                    className="relative pb-2 text-xs uppercase tracking-[0.24em] text-cocoa/70 transition-colors hover:text-cocoa"
                   >
                     <span className={isActive ? "font-semibold text-cocoa" : ""}>{chapter.category}</span>
                     {isActive ? (
                       <motion.span
                         layoutId="underline"
                         className="absolute inset-x-0 -bottom-px h-px bg-cocoa"
-                        transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                        transition={{ type: "spring", stiffness: 420, damping: 40 }}
                       />
                     ) : null}
                   </button>
@@ -80,77 +82,48 @@ export default function MenuTabs() {
           </ul>
         </nav>
 
-        <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr] lg:gap-20">
           <AnimatePresence mode="wait">
-            <motion.article
-              key={active.id}
-              initial="hidden"
-              animate="show"
-              exit="hidden"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                show: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { staggerChildren: 0.08, delayChildren: 0.12, ease: easing as [number, number, number, number] },
-                },
-              }}
-              className="order-2 lg:order-1"
-            >
-              <motion.p
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                className="text-xs uppercase tracking-[0.26em] text-cocoa/55"
-              >
-                Capítulo {chapterNumber}
-              </motion.p>
+            <motion.article key={active.id} className={`order-2 lg:order-1 ${editorialOffset}`}>
+              <TextReveal className="text-xs uppercase tracking-[0.26em] text-cocoa/55">
+                <p>Capítulo {chapterNumber}</p>
+              </TextReveal>
 
-              <motion.h2
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                className="mt-4 font-[family-name:var(--font-display-serif)] text-[clamp(2.5rem,6vw,5.4rem)] uppercase leading-[0.88] text-cocoa"
-              >
-                {active.category}
-              </motion.h2>
+              <TextReveal className="mt-4" delay={0.08}>
+                <h2 className="font-[family-name:var(--font-display-serif)] text-[clamp(2.8rem,7vw,6rem)] uppercase leading-[0.84] text-cocoa">
+                  {active.category}
+                </h2>
+              </TextReveal>
 
-              <motion.h3
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                className="mt-5 text-2xl font-medium leading-tight text-cocoa md:text-3xl"
-              >
-                {active.name}
-              </motion.h3>
+              <TextReveal className="mt-6" delay={0.14}>
+                <h3 className="text-2xl font-medium leading-tight text-cocoa md:text-3xl">{active.name}</h3>
+              </TextReveal>
 
-              <motion.p
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                className="mt-4 max-w-md text-pretty text-cocoa/70"
-              >
-                {active.description}
-              </motion.p>
+              <TextReveal className="mt-4" delay={0.18}>
+                <p className="max-w-sm text-pretty text-cocoa/70">{active.description}</p>
+              </TextReveal>
 
-              <motion.p
-                variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                className="mt-6 text-sm tracking-[0.14em] text-cocoa/80"
-              >
-                {active.price}
-              </motion.p>
+              <TextReveal className="mt-7" delay={0.24}>
+                <p className="text-sm tracking-[0.14em] text-cocoa/80">{active.price}</p>
+              </TextReveal>
             </motion.article>
           </AnimatePresence>
 
-          <div className="order-1 lg:order-2">
+          <div className="order-1 lg:order-2 lg:pr-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.image}
-                initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0.85 }}
-                animate={{ clipPath: "inset(0 0 0 0)", opacity: 1 }}
-                exit={{ clipPath: "inset(0 0 0 100%)", opacity: 0.85 }}
-                transition={{ duration: 0.85, ease: easing as [number, number, number, number] }}
-                className="relative ml-auto aspect-[3/4] w-full overflow-hidden rounded-2xl lg:max-h-[76vh]"
+                initial={{ clipPath: "inset(0 100% 0 0)" }}
+                animate={{ clipPath: "inset(0 0 0 0)" }}
+                exit={{ clipPath: "inset(0 0 0 100%)" }}
+                transition={{ duration: 1.1, ease: easing }}
+                className="relative ml-auto aspect-[3/4] w-full overflow-hidden rounded-[1.7rem] lg:max-h-[78vh]"
               >
-                <Image
+                <ParallaxImage
                   src={active.image}
                   alt={active.name}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 60vw, 100vw"
-                  priority
+                  className="h-full w-full"
+                  sizes="(min-width: 1024px) 58vw, 100vw"
                 />
               </motion.div>
             </AnimatePresence>

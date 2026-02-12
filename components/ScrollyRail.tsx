@@ -15,6 +15,9 @@ const gallery = [
 ];
 
 const bentoItems = ["Reservas", "Carta", "Horarios", "Ubicación", "Reseñas", "Instagram"];
+const processSteps = ["Fermentar", "Hornear", "Atemperar", "Emplatar"];
+const ingredientTokens = ["Cacao 72%", "Pistacho verde", "Azahar", "Sal marina", "Vainilla bourbon"];
+const tastingNotes = ["Crujiente", "Untuoso", "Cítrico", "Final seco"];
 type RailState = { isActive: boolean; progress: number; start: number; end: number };
 
 const sceneTitles = [
@@ -256,7 +259,12 @@ export default function ScrollyRail() {
             <div className="absolute inset-x-0 top-[16%] px-6 md:px-12">
               <p className="text-xs uppercase tracking-[0.28em] text-white/65">Story 01</p>
               <h1 className="mt-4 font-display text-[clamp(3rem,14vw,14rem)] uppercase leading-[0.82]">Noir Atelier</h1>
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/30 px-4 py-2 backdrop-blur">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-300" />
+                <span className="text-[0.7rem] uppercase tracking-[0.2em] text-white/80">Menú en vivo · 18 cubiertos</span>
+              </div>
             </div>
+            <div className="pointer-events-none absolute bottom-[12%] right-[8%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,230,180,0.35),transparent_68%)] blur-xl" />
           </div>
         </article>
 
@@ -272,6 +280,10 @@ export default function ScrollyRail() {
               <p className="text-xs uppercase tracking-[0.25em] text-white/55">Story 02</p>
               <p className="mt-2 text-sm uppercase tracking-[0.2em] text-white/52">Lucía Ferrer · Creative Chef</p>
               <p className="mt-3 max-w-md text-2xl leading-tight text-white/88">“Cada plato es un encuadre. Cada textura, una línea en la narrativa.”</p>
+              <div className="mt-6 grid max-w-sm gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/15 bg-white/[0.04] p-3 text-xs uppercase tracking-[0.18em] text-white/65">Best New Table 2026</div>
+                <div className="rounded-2xl border border-white/15 bg-white/[0.04] p-3 text-xs uppercase tracking-[0.18em] text-white/65">Gourmet Index 9.4</div>
+              </div>
             </div>
           </div>
         </article>
@@ -287,6 +299,15 @@ export default function ScrollyRail() {
               <p className="text-xs uppercase tracking-[0.25em] text-white/55">Story 03 — Proceso</p>
               <h2 className="mt-4 font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[0.9]">Masa, horno, emplatado.</h2>
               <p className="mt-4 max-w-md text-white/75">Ritmo de taller: fermentación lenta, fuego preciso y acabado en pase corto.</p>
+              <div className="mt-7 space-y-2">
+                {processSteps.map((step, idx) => (
+                  <div key={step} className="flex items-center gap-3 text-sm uppercase tracking-[0.16em] text-white/60">
+                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/30 text-[0.65rem]">{idx + 1}</span>
+                    <span>{step}</span>
+                    <span className="h-px flex-1 bg-white/15" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </article>
@@ -305,6 +326,19 @@ export default function ScrollyRail() {
               <motion.p className="kinetic-line mt-4 max-w-xl text-base text-white/72" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.48, delay: 0.18 }}>
                 Mise en place de estación: cada lote entra cuando su aroma está en pico y desaparece antes de repetirse.
               </motion.p>
+              <div className="mt-7 flex flex-wrap gap-2">
+                {ingredientTokens.map((token, idx) => (
+                  <motion.span
+                    key={token}
+                    className="kinetic-line rounded-full border border-white/20 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.14em] text-white/75"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2 + idx * 0.06 }}
+                  >
+                    {token}
+                  </motion.span>
+                ))}
+              </div>
             </div>
           </div>
         </article>
@@ -321,6 +355,13 @@ export default function ScrollyRail() {
                 <p className="text-xs uppercase tracking-[0.25em] text-white/55">Story 05 — Signature Dish</p>
                 <h2 className="mt-4 font-display text-[clamp(2.2rem,6vw,5.5rem)] leading-[0.9]">Caramelo negro, cacao y flor de sal.</h2>
                 <p className="mt-4 max-w-md text-white/72">Texturas en capas, temperatura medida y un final seco para prolongar el recuerdo.</p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {tastingNotes.map((note) => (
+                    <span key={note} className="rounded-full border border-white/20 bg-black/35 px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] text-white/75">
+                      {note}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -328,9 +369,10 @@ export default function ScrollyRail() {
 
         <article className="scene scene-6 absolute inset-0 px-6 py-14 md:px-10">
           <h2 className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.88]">Bento Highlights</h2>
+          <div className="pointer-events-none absolute right-16 top-20 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(143,210,255,0.25),transparent_65%)] blur-2xl" />
           <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-12">
             {bentoItems.map((item) => (
-              <div key={item} className="bento-card rounded-[1.4rem] border border-white/15 bg-white/[0.05] p-5 md:col-span-4">
+              <div key={item} className="bento-card rounded-[1.4rem] border border-white/15 bg-white/[0.05] p-5 transition-transform duration-300 hover:-translate-y-1 md:col-span-4">
                 <p className="text-xs uppercase tracking-[0.24em] text-white/45">{item}</p>
                 <p className="mt-4 text-2xl text-white/90">{item === "Instagram" ? "@noiratelier" : `Explorar ${item.toLowerCase()}`}</p>
               </div>
@@ -342,15 +384,18 @@ export default function ScrollyRail() {
           <h2 className="font-display text-[clamp(2.4rem,6vw,6rem)] leading-[0.9]">Gallery Strip</h2>
           <div className="mt-8 grid h-[70vh] gap-4 md:grid-cols-12">
             {gallery.map((image, idx) => (
-              <div key={image} className={`gallery-item overflow-hidden rounded-[1.4rem] border border-white/15 ${idx === 0 ? "md:col-span-5" : "md:col-span-3"}`}>
+              <div key={image} className={`gallery-item group relative overflow-hidden rounded-[1.4rem] border border-white/15 ${idx === 0 ? "md:col-span-5" : "md:col-span-3"}`}>
                 <img src={image} alt="Galería editorial" className="h-full w-full object-cover" />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-[0.65rem] uppercase tracking-[0.16em] text-white/0 transition group-hover:text-white/75">
+                  Chapter 0{idx + 1}
+                </div>
               </div>
             ))}
           </div>
         </article>
 
         <article className="scene scene-8 absolute inset-0 grid items-center px-6 text-center md:px-10">
-          <div className="mx-auto max-w-4xl">
+          <div className="mx-auto max-w-4xl rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.1),transparent_55%)] p-8 md:p-14">
             <p className="cta-item text-xs uppercase tracking-[0.25em] text-white/55">Story 08 · Final CTA</p>
             <h2 className="cta-item mt-5 font-display text-[clamp(2.8rem,9vw,9rem)] leading-[0.84]">¿Listo para tu próxima velada?</h2>
             <p className="cta-item mt-5 text-lg text-white/74">Últimas plazas para el próximo menú degustación y encargos boutique.</p>

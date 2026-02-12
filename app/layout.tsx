@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Syncopate } from "next/font/google";
 import Script from "next/script";
 import Cursor from "@/components/Cursor";
+import SmoothScroll from "@/components/SmoothScroll";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -34,7 +35,7 @@ export default function RootLayout({
         <Script src="https://unpkg.com/gsap@3.13.0/dist/gsap.min.js" strategy="beforeInteractive" />
         <Script src="https://unpkg.com/gsap@3.13.0/dist/ScrollTrigger.min.js" strategy="beforeInteractive" />
         <Cursor />
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

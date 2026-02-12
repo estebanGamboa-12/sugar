@@ -1,39 +1,58 @@
 "use client";
 
-import { useRef } from "react";
+import { ReactNode, useMemo, useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 type MagneticProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   strength?: number;
+  asChild?: boolean;
 };
 
-export default function Magnetic({ children, className, strength = 8 }: MagneticProps) {
+export default function Magnetic({ children, className, strength = 28 }: MagneticProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const handleMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (window.matchMedia("(pointer: coarse)").matches || !ref.current) return;
+  const springConfig = useMemo(
+    () => ({
+      stiffness: 280,
+      damping: 24,
+      mass: 0.35,
+    }),
+    [],
+  );
+
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!ref.current || window.matchMedia("(pointer: coarse)").matches) return;
+
     const rect = ref.current.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / rect.width - 0.5) * strength * 2;
-    const y = ((event.clientY - rect.top) / rect.height - 0.5) * strength * 2;
-    ref.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    const offsetX = event.clientX - (rect.left + rect.width / 2);
+    const offsetY = event.clientY - (rect.top + rect.height / 2);
+
+    x.set((offsetX / rect.width) * strength);
+    y.set((offsetY / rect.height) * strength);
   };
 
-  const reset = () => {
-    if (!ref.current) return;
-    ref.current.style.transform = "translate3d(0,0,0)";
+  const handlePointerLeave = () => {
+    x.set(0);
+    y.set(0);
   };
 
   return (
-    <div
+    <motion.div
       ref={ref}
-      data-magnetic="true"
       className={className}
-      onMouseMove={handleMove}
-      onMouseLeave={reset}
-      style={{ transition: "transform 220ms cubic-bezier(0.22,1,0.36,1)", willChange: "transform" }}
+      style={{ x: springX, y: springY }}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      transition={{ ease: [0.76, 0, 0.24, 1] }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

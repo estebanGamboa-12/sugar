@@ -8,25 +8,31 @@ const labShots = [
     title: "Mise en Place",
     description: "Pesajes exactos, termómetro digital y masa madre activa en reposo controlado.",
     image:
-      "https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1602351447937-745cb720612f?q=80&w=1600&auto=format&fit=crop",
   },
   {
     title: "Cacao Temperado",
     description: "Curva térmica perfecta para lograr brillo espejo y snap nítido en cada tableta.",
     image:
-      "https://images.unsplash.com/photo-1511389026070-a14ae610a1be?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1583338917451-face2751d8d5?q=80&w=1600&auto=format&fit=crop",
   },
   {
     title: "Sketch & Structure",
     description: "Bocetos de volumen, capas aromáticas y geometría de emplatado al milímetro.",
     image:
-      "https://images.unsplash.com/photo-1457666134378-6b77915bd5f2?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1616690710400-a16d146927c5?q=80&w=1600&auto=format&fit=crop",
   },
   {
     title: "Final Glaze",
     description: "Último acabado: glaseado espejo, microbrotes y texturas que despiertan el paladar.",
     image:
-      "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1603532648955-039310d9ed75?q=80&w=1600&auto=format&fit=crop",
+  },
+  {
+    title: "Signature Finish",
+    description: "Capas aireadas, frutas frescas y detalles finales para una vitrina irresistible.",
+    image:
+      "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1600&auto=format&fit=crop",
   },
 ];
 

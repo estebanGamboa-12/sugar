@@ -12,7 +12,7 @@ const chapters = [
     description: "Bizcocho vainilla, crema de yogur y fresas brillantes con acabado glaseado.",
     price: "€7.90",
     image:
-      "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1562440499-64c9a111f713?q=80&w=1400&auto=format&fit=crop",
   },
   {
     id: "croissants",
@@ -21,7 +21,7 @@ const chapters = [
     description: "Laminado de mantequilla AOP relleno de crema de pistacho tostado.",
     price: "€4.80",
     image:
-      "https://images.unsplash.com/photo-1549903072-7e6e14f8cf2d?auto=format&fit=crop&w=1400&q=80",
+      "https://plus.unsplash.com/premium_photo-1715015439764-1e8d37d5c6c9?q=80&w=1400&auto=format&fit=crop",
   },
   {
     id: "cookies",
@@ -30,7 +30,7 @@ const chapters = [
     description: "Galleta chewy con chips 70%, cacao holandés y corazón fundente.",
     price: "€3.60",
     image:
-      "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1562777717-dc6984f65a63?q=80&w=1400&auto=format&fit=crop",
   },
   {
     id: "bebidas",
@@ -39,7 +39,7 @@ const chapters = [
     description: "Matcha ceremonial con leche cremosa y espuma de rosa suave.",
     price: "€5.50",
     image:
-      "https://images.unsplash.com/photo-1464306076886-da185f6a9d05?auto=format&fit=crop&w=1400&q=80",
+      "https://plus.unsplash.com/premium_photo-1663133737289-448f4954f042?q=80&w=1400&auto=format&fit=crop",
   },
 ];
 

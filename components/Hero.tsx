@@ -22,7 +22,7 @@ export default function Hero() {
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1481391032119-d89fee407e44?auto=format&fit=crop&w=2200&q=80')",
+            "url('https://images.unsplash.com/photo-1621303837174-89787a7d4729?q=80&w=1600&auto=format&fit=crop')",
         }}
       />
 

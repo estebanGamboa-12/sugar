@@ -1,28 +1,30 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-export default {
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./lib/**/*.{js,ts,jsx,tsx,mdx}"],
+const config: Config = {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './hooks/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}'
+  ],
   theme: {
     extend: {
       colors: {
-        cream: "#FFF7F3",
-        lavender: "#F8F1FF",
-        strawberry: "#FF6FAE",
-        pistachio: "#A7E6C6",
-        cocoa: "#2B1B14",
-      },
-      boxShadow: {
-        soft: "0 12px 40px rgba(43, 27, 20, 0.12)",
-        "soft-lg": "0 18px 56px rgba(43, 27, 20, 0.14)",
-        "soft-xl": "0 24px 70px rgba(43, 27, 20, 0.16)",
+        noir: '#070707',
+        cream: '#f4e9d8',
+        ruby: '#a1143b',
+        steel: '#9ca6bd'
       },
       fontFamily: {
-        sans: ["var(--font-manrope)", "sans-serif"],
-        display: ["var(--font-syncopate)", "sans-serif"],
+        serif: ['"Cormorant Garamond"', 'serif'],
+        sans: ['"Inter"', 'sans-serif']
       },
-      borderRadius: {
-        '4xl': '2rem',
-      },
-    },
+      boxShadow: {
+        glow: '0 0 20px rgba(161,20,59,0.5)'
+      }
+    }
   },
-} satisfies Config;
+  plugins: []
+};
+
+export default config;

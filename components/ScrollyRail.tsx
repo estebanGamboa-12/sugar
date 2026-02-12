@@ -93,7 +93,7 @@ export default function ScrollyRail() {
         next.style.pointerEvents = "auto";
 
         gsap.to(prevScene, { autoAlpha: 0, y: -10, scale: 0.985, duration: 0.38, ease: "power2.out", overwrite: "auto" });
-        gsap.fromTo(next, { autoAlpha: 0, y: 16, scale: 0.98 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out", overwrite: "auto" });
+        gsap.fromTo(next, { autoAlpha: 0, y: 16, scale: 0.98, immediateRender: false }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out", overwrite: "auto" });
 
         currentScene = nextScene;
         setActiveScene(nextScene);
@@ -139,15 +139,15 @@ export default function ScrollyRail() {
         .add(() => setSceneVisibility(6), beatSize * 6)
         .fromTo(".s7-mask", { clipPath: "inset(0 100% 0 0)", immediateRender: false }, { clipPath: "inset(0 0% 0 0)", duration: 0.75 }, beatSize * 6)
         .fromTo(".s7-quote", { autoAlpha: 0, filter: "blur(6px)", y: 14, immediateRender: false }, { autoAlpha: 1, filter: "blur(0px)", y: 0, stagger: 0.1, duration: 0.34 }, beatSize * 6.2)
-        .add(() => setSceneVisibility(7), beatSize * 7.1)
-        .fromTo(".s8-glass", { backdropFilter: "blur(18px)", opacity: 0.78, immediateRender: false }, { backdropFilter: "blur(8px)", opacity: 1, duration: 0.8 }, beatSize * 7.1)
+        .add(() => setSceneVisibility(7), beatSize * 7.85)
+        .fromTo(".s8-glass", { backdropFilter: "blur(18px)", opacity: 0.78, immediateRender: false }, { backdropFilter: "blur(8px)", opacity: 1, duration: 0.8 }, beatSize * 7.85)
         .to(cameraRef.current, { scale: 1, rotateZ: 0, x: 0, y: 0, duration: 0.8, ease: "power2.out" }, beatSize * 8)
         .fromTo(".dock-settle", { y: 0, immediateRender: false }, { y: -2, yoyo: true, repeat: 1, duration: 0.16 }, beatSize * 8.05);
 
       const trigger = ScrollTrigger.create({
         trigger: stageRef.current,
         start: "top top",
-        end: "+=1200%",
+        end: `+=${TOTAL_SCENES * 150}%`,
         pin: true,
         scrub: reducedMotion ? false : 1.08,
         animation: master,
@@ -200,7 +200,7 @@ export default function ScrollyRail() {
 
       <div ref={stageRef} className="stage relative h-screen overflow-hidden border-y border-white/10">
         <div ref={cameraRef} className="camera relative h-full w-full will-change-transform">
-          <article className="story-scene absolute inset-0 z-10 p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-10 p-6 md:p-10 relative">
             <div className="h-full rounded-[2rem] border border-white/10 bg-[#0b0b0b] p-6 md:p-10">
               <div data-media-slot className="relative mx-auto h-[66vh] max-w-5xl overflow-hidden rounded-[1.6rem]" />
               <div className="s1-vignette pointer-events-none absolute inset-0 opacity-0" style={{ background: "radial-gradient(circle at center, transparent 14%, rgba(0,0,0,0.8) 82%)" }} />
@@ -211,7 +211,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-20 grid items-center p-6 md:grid-cols-12 md:p-10">
+          <article className="story-scene absolute inset-0 z-20 grid items-center p-6 md:grid-cols-12 md:p-10 relative">
             <div className="md:col-span-8">
               <div data-media-slot className="s2-diagonal relative h-[64vh] overflow-hidden rounded-[1.5rem] border border-white/15" />
               <span className="s2-line mt-3 block h-px w-full bg-[#efe0c2]/70" />
@@ -222,7 +222,7 @@ export default function ScrollyRail() {
             </motion.p>
           </article>
 
-          <article className="story-scene absolute inset-0 z-30 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-30 grid items-center p-6 md:p-10 relative">
             <div data-media-slot className="relative h-[68vh] overflow-hidden rounded-[1.7rem] border border-white/14">
               <div className="s3-panel-a absolute inset-y-0 left-0 w-1/3 border-r border-white/10 bg-black/15" />
               <div className="s3-panel-b absolute inset-y-0 left-1/3 w-1/3 border-r border-white/10 bg-black/10" />
@@ -231,7 +231,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-40 grid items-center p-6 md:p-10 [perspective:1200px]">
+          <article className="story-scene absolute inset-0 z-40 grid items-center p-6 md:p-10 [perspective:1200px] relative">
             <div className="s4-stack mx-auto w-full max-w-4xl">
               <div className="s4-card-a rounded-3xl border border-white/15 bg-[#121212] p-6">Cacao · vainilla · crema tibia</div>
               <div className="s4-card-b -mt-7 ml-12 rounded-3xl border border-white/12 bg-[#151515] p-6">Brioche · noisette · sal marina</div>
@@ -240,7 +240,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-50 p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-50 p-6 md:p-10 relative">
             <div className="s5-spotlight relative grid h-full grid-cols-2 gap-3 rounded-[1.7rem] border border-white/14 bg-white/[0.03] p-4 [--mx:50%] [--my:50%] md:grid-cols-4">
               <div className="pointer-events-none absolute inset-0 rounded-[1.7rem]" style={{ background: isMobile || isReduced ? "none" : "radial-gradient(circle at var(--mx) var(--my), rgba(239,224,194,0.14), transparent 40%)" }} />
               <div data-media-slot className="col-span-2 row-span-2 overflow-hidden rounded-[1.3rem] border border-white/16" />
@@ -259,7 +259,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-60 overflow-hidden p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-60 overflow-hidden p-6 md:p-10 relative">
             <div className="h-full overflow-hidden rounded-[1.8rem] border border-white/12 bg-[#0e0e0e] p-4">
               <div ref={filmTrackRef} className="flex w-max gap-4">
                 <div data-media-slot className="s6-item h-[64vh] w-[66vw] overflow-hidden rounded-[1.3rem] border border-white/16 md:w-[30vw]" />
@@ -272,7 +272,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-70 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-70 grid items-center p-6 md:p-10 relative">
             <div className="mx-auto grid w-full max-w-5xl gap-8 md:grid-cols-[1fr_1.1fr]">
               <div data-media-slot className="h-[52vh] overflow-hidden rounded-[1.4rem] border border-white/14 opacity-70" />
               <div>
@@ -288,7 +288,7 @@ export default function ScrollyRail() {
             </div>
           </article>
 
-          <article className="story-scene absolute inset-0 z-80 grid items-center p-6 md:p-10">
+          <article className="story-scene absolute inset-0 z-80 grid items-center p-6 md:p-10 relative">
             <div data-media-slot className="absolute inset-4 overflow-hidden rounded-[2rem] border border-white/10 opacity-35 md:inset-8" />
             <div className="s8-glass relative mx-auto w-full max-w-3xl rounded-[2rem] border border-white/22 bg-white/[0.09] p-8 text-center backdrop-blur-[18px] md:p-12">
               <p className="text-[11px] uppercase tracking-[0.22em] text-[#efe0c2]/82">Último pase</p>

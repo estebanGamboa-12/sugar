@@ -55,9 +55,9 @@ export default function HomePage() {
           </Reveal>
         </section>
 
-        <section id="menu" className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
+        <section id="bento" className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
           <Reveal className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10" rounded="2rem">
-            <h3 className="font-display text-[clamp(2rem,5vw,4.2rem)] leading-[0.9]">Menu / Specials</h3>
+            <h3 className="font-display text-[clamp(2rem,5vw,4.2rem)] leading-[0.9]">Bento / Highlights</h3>
             <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-12">
               {specials.map((item, index) => (
                 <article
@@ -74,13 +74,13 @@ export default function HomePage() {
           </Reveal>
         </section>
 
-        <section id="story" className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-36">
+        <section id="story" className="mx-auto max-w-6xl px-6 py-28 md:px-10 md:py-44">
           <Reveal className="space-y-16" rounded="2rem">
             <div className="max-w-2xl space-y-5">
               <p className="text-xs uppercase tracking-[0.26em] text-white/45">Our Story / Ingredients</p>
               <h3 className="font-display text-[clamp(2.4rem,7vw,6rem)] leading-[0.9]">Origen, estación y paciencia.</h3>
             </div>
-            <div className="grid gap-12 md:grid-cols-12">
+            <div className="grid gap-14 md:grid-cols-12">
               <p className="text-lg leading-relaxed text-white/74 md:col-span-7">
                 Trabajamos con lotes pequeños, cacao de origen, mantequillas de temporada y fruta en punto de maduración.
                 El menú cambia por capítulos: cada ingrediente entra cuando su perfil aromático está listo y desaparece

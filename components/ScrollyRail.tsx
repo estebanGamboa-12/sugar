@@ -22,23 +22,23 @@ export default function ScrollyRail() {
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
 
-  const heroTitleY = useTransform(scrollYProgress, [0, 0.12, 0.2], [26, 0, -22]);
-  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.12, 0.2], [0.2, 1, 0.7]);
+  const heroTitleY = useTransform(scrollYProgress, [0, 0.12, 0.2], [24, 0, -18]);
+  const heroTitleOpacity = useTransform(scrollYProgress, [0, 0.12, 0.2], [0.35, 1, 0.75]);
 
-  const portraitTitleY = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [24, 0, -18]);
-  const portraitTitleOpacity = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [0.25, 1, 0.72]);
+  const portraitTitleY = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [20, 0, -14]);
+  const portraitTitleOpacity = useTransform(scrollYProgress, [0.16, 0.3, 0.42], [0.35, 1, 0.72]);
 
-  const dishTitleY = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [20, 0, -14]);
-  const dishTitleOpacity = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [0.25, 1, 0.75]);
+  const dishTitleY = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [18, 0, -12]);
+  const dishTitleOpacity = useTransform(scrollYProgress, [0.33, 0.45, 0.54], [0.3, 1, 0.75]);
 
-  const bentoTitleY = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [20, 0, -14]);
-  const bentoTitleOpacity = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [0.25, 1, 0.75]);
+  const bentoTitleY = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [16, 0, -10]);
+  const bentoTitleOpacity = useTransform(scrollYProgress, [0.5, 0.62, 0.72], [0.3, 1, 0.76]);
 
-  const galleryTitleY = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [20, 0, -14]);
-  const galleryTitleOpacity = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [0.25, 1, 0.75]);
+  const galleryTitleY = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [16, 0, -10]);
+  const galleryTitleOpacity = useTransform(scrollYProgress, [0.67, 0.79, 0.88], [0.3, 1, 0.78]);
 
-  const ctaTitleY = useTransform(scrollYProgress, [0.83, 0.94, 1], [24, 0, -12]);
-  const ctaTitleOpacity = useTransform(scrollYProgress, [0.83, 0.94, 1], [0.3, 1, 0.95]);
+  const ctaTitleY = useTransform(scrollYProgress, [0.83, 0.94, 1], [18, 0, -8]);
+  const ctaTitleOpacity = useTransform(scrollYProgress, [0.83, 0.94, 1], [0.35, 1, 0.96]);
 
   useLayoutEffect(() => {
     const root = sectionRef.current;
@@ -55,7 +55,7 @@ export default function ScrollyRail() {
         return;
       }
 
-      gsap.set(".scene", { autoAlpha: 0, pointerEvents: "none", y: 16, scale: 0.985 });
+      gsap.set(".scene", { autoAlpha: 0, pointerEvents: "none", y: 16, scale: 0.99 });
       gsap.set(".scene-1", { autoAlpha: 1, pointerEvents: "auto", y: 0, scale: 1 });
 
       const tl = gsap.timeline({
@@ -63,7 +63,7 @@ export default function ScrollyRail() {
         scrollTrigger: {
           trigger: root,
           start: "top top",
-          end: "+=900%",
+          end: "+=800%",
           pin: true,
           scrub: 1,
           markers: SHOW_MARKERS,
@@ -72,54 +72,58 @@ export default function ScrollyRail() {
         },
       });
 
-      const tlWithLabels = tl as unknown as { addLabel: (name: string, position?: string) => void };
-
-      const transitionTo = (outgoing: string, incoming: string, at: string) => {
-        tl.to(outgoing, { autoAlpha: 0, y: -16, scale: 1.015, pointerEvents: "none", duration: 0.42 }, at)
-          .fromTo(
-            incoming,
-            { autoAlpha: 0, y: 16, scale: 0.985, pointerEvents: "none" },
-            { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 0.48 },
-            "<",
-          );
+      const withLabels = tl as unknown as {
+        addLabel: (label: string, position?: string | number) => typeof tl;
       };
 
-      tlWithLabels.addLabel("scene-1")
-      tl
-        .to(frameRef.current, {
-          scale: isMobile ? 1.08 : 1.25,
-          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.2rem)" : "inset(0% 0% 0% 0% round 0rem)",
-          borderRadius: isMobile ? "1.2rem" : 0,
-          duration: 1.1,
+      const transitionTo = (outgoing: string, incoming: string, at: string) => {
+        tl.to(outgoing, { autoAlpha: 0, y: -14, scale: 1.01, pointerEvents: "none", duration: 0.44 }, at).fromTo(
+          incoming,
+          { autoAlpha: 0, y: 14, scale: 0.99, pointerEvents: "none" },
+          { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 0.52 },
+          "<",
+        );
+      };
+
+      withLabels.addLabel("scene-1");
+      tl.to(frameRef.current, {
+          scale: isMobile ? 1.06 : 1.22,
+          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.1rem)" : "inset(0% 0% 0% 0% round 0rem)",
+          borderRadius: isMobile ? "1.1rem" : 0,
+          duration: 1,
         })
-        .to(".hero-vignette", { opacity: 0.14, duration: 0.8 }, "<")
-        ;
-      tlWithLabels.addLabel("scene-2", "+=0.45");
+        .to(".hero-vignette", { opacity: 0.16, duration: 0.75 }, "<");
+      withLabels.addLabel("scene-2", "+=0.45");
 
       transitionTo(".scene-1", ".scene-2", "scene-2");
       tl.fromTo(
         portraitRevealRef.current,
-        { clipPath: isMobile ? "inset(8% 8% 8% 8% round 1.6rem)" : "inset(100% 0% 0% 0%)", yPercent: isMobile ? 0 : 8 },
+        {
+          clipPath: isMobile ? "inset(6% 6% 6% 6% round 1.4rem)" : "inset(100% 0% 0% 0%)",
+          yPercent: isMobile ? 0 : 8,
+        },
         { clipPath: "inset(0% 0% 0% 0%)", yPercent: 0, duration: 0.9 },
         "<0.08",
       )
-        .fromTo(".diagonal-line", { scaleX: 0 }, { scaleX: 1, transformOrigin: "left center", duration: 0.55 }, "<0.12")
-        ;
-      tlWithLabels.addLabel("scene-3", "+=0.7");
+        .fromTo(".diagonal-line", { scaleX: 0 }, { scaleX: 1, transformOrigin: "left center", duration: 0.6 }, "<0.12");
+      withLabels.addLabel("scene-3", "+=0.65");
 
       transitionTo(".scene-2", ".scene-3", "scene-3");
-      tl.fromTo(signatureRef.current, { scale: 1.05 }, { scale: 1, duration: 1 }, "<")
-        .fromTo(".dish-caption", { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.6 }, "<0.15")
-        ;
-      tlWithLabels.addLabel("scene-4", "+=0.72");
+      tl.fromTo(signatureRef.current, { scale: 1.05 }, { scale: 1, duration: 1 }, "<").fromTo(
+        ".dish-caption",
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.58 },
+        "<0.14",
+      );
+      withLabels.addLabel("scene-4", "+=0.68");
 
       transitionTo(".scene-3", ".scene-4", "scene-4");
       tl.fromTo(
         ".bento-card",
         {
           autoAlpha: 0,
-          y: 44,
-          scale: 0.96,
+          y: 40,
+          scale: 0.97,
           clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.2rem)" : "inset(0% 0% 100% 0% round 1.2rem)",
         },
         {
@@ -128,41 +132,58 @@ export default function ScrollyRail() {
           scale: 1,
           clipPath: "inset(0% 0% 0% 0% round 1.2rem)",
           stagger: 0.08,
-          duration: 0.5,
+          duration: 0.52,
         },
         "<0.08",
       );
-      tlWithLabels.addLabel("scene-5", "+=0.65");
+      withLabels.addLabel("scene-5", "+=0.6");
 
       transitionTo(".scene-4", ".scene-5", "scene-5");
       tl.fromTo(
         ".gallery-item",
         {
-          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.3rem)" : "inset(0% 0% 100% 0% round 1.3rem)",
-          y: 35,
+          clipPath: isMobile ? "inset(0% 0% 0% 0% round 1.2rem)" : "inset(0% 0% 100% 0% round 1.2rem)",
+          y: 30,
           autoAlpha: 0,
         },
-        { clipPath: "inset(0% 0% 0% 0% round 1.3rem)", y: 0, autoAlpha: 1, duration: 0.72, stagger: 0.12 },
+        { clipPath: "inset(0% 0% 0% 0% round 1.2rem)", y: 0, autoAlpha: 1, duration: 0.7, stagger: 0.1 },
         "<",
       );
-      tlWithLabels.addLabel("scene-6", "+=0.72");
+      withLabels.addLabel("scene-6", "+=0.65");
 
       transitionTo(".scene-5", ".scene-6", "scene-6");
-      tl.fromTo(".cta-item", { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.15, duration: 0.55 }, "<0.08");
+      tl.fromTo(".cta-item", { y: 20, autoAlpha: 0, scale: 0.99 }, { y: 0, autoAlpha: 1, scale: 1, duration: 0.52, stagger: 0.08 }, "<0.1");
     }, sectionRef);
 
-    requestAnimationFrame(() => ScrollTrigger.refresh());
+    const refresh = () => ScrollTrigger.refresh();
+    document.fonts?.ready.then(refresh);
+    window.addEventListener("load", refresh);
+    root.querySelectorAll("img").forEach((img) => {
+      if (!img.complete) {
+        img.addEventListener("load", refresh, { once: true });
+      }
+    });
 
-    return () => ctx.revert();
+    return () => {
+      window.removeEventListener("load", refresh);
+      root.querySelectorAll("img").forEach((img) => {
+        img.removeEventListener("load", refresh);
+      });
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-clip">
-      <div className="relative h-full w-full">
-        <article className="scene scene-1 absolute inset-0 px-6 py-10 md:px-10">
-          <div ref={frameRef} className="h-full w-full overflow-hidden border border-white/20 bg-black [clip-path:inset(8%_8%_12%_8%_round_2.4rem)]">
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-black text-white" aria-label="Scrolly rail">
+      <div className="relative h-screen">
+        <article className="scene scene-1 absolute inset-0">
+          <div
+            ref={frameRef}
+            className="relative h-full overflow-hidden rounded-[2rem] border border-white/20 bg-neutral-950"
+            style={{ clipPath: "inset(8% 7% 10% 7% round 2rem)" }}
+          >
             <img
-              src="https://images.unsplash.com/photo-1464306076886-da185f6a9d05?auto=format&fit=crop&w=1800&q=80"
+              src="https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?auto=format&fit=crop&w=1800&q=80"
               alt="Postres de autor"
               className="h-full w-full object-cover"
             />

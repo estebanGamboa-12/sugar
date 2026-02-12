@@ -1,30 +1,19 @@
-# Atelier Noir · Tartas Couture
+# Next.js Starter
 
-Experiencia de scrollytelling cinematográfica en Next.js App Router con GSAP ScrollTrigger + Lenis.
-
-## Instalación
-
-```bash
-npm install
-```
+Proyecto base limpio con Next.js (App Router + TypeScript).
 
 ## Desarrollo
 
 ```bash
+npm install
 npm run dev
 ```
 
-## Producción
+Abre [http://localhost:3000](http://localhost:3000).
 
-```bash
-npm run build
-npm run start
-```
+## Scripts
 
-## Stack
-
-- Next.js (App Router)
-- React 18
-- TailwindCSS
-- GSAP + ScrollTrigger
-- Lenis
+- `npm run dev`: entorno local
+- `npm run build`: build de producción
+- `npm run start`: ejecuta el build
+- `npm run lint`: validación con ESLint

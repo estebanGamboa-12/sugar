@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { setupGSAP } from "@/lib/gsap";
 
 declare global {
@@ -18,45 +18,54 @@ declare global {
   }
 }
 
-export default function SmoothScroll({ children }: { children: React.ReactNode }) {
+type SmoothScrollProps = {
+  children: ReactNode;
+};
+
+export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     if (!window.Lenis || !window.gsap || !window.ScrollTrigger) return;
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const { gsap, ScrollTrigger } = setupGSAP();
 
     const lenis = new window.Lenis({
-      duration: reduced ? 0 : 1.2,
-      smoothWheel: !reduced,
-      touchMultiplier: 1.1,
-      lerp: reduced ? 1 : 0.1,
+      duration: reducedMotion ? 0 : 1.1,
+      lerp: reducedMotion ? 1 : 0.085,
+      smoothWheel: !reducedMotion,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.2,
+      infinite: false,
+      easing: (t: number) => 1 - Math.pow(1 - t, 4),
     });
 
     window.__lenis = lenis;
 
-    const updateScrollTrigger = () => ScrollTrigger.update();
-    lenis.on("scroll", updateScrollTrigger);
+    const syncScroll = () => ScrollTrigger.update();
+    lenis.on("scroll", syncScroll);
 
-    const tick = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
+    const raf = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
     const onAnchorRequest = (event: Event) => {
       const customEvent = event as CustomEvent<{ target: string }>;
       const selector = customEvent.detail?.target;
       if (!selector) return;
-      const el = document.querySelector(selector);
-      if (el) lenis.scrollTo(el, { duration: reduced ? 0 : 1.2 });
+      const target = document.querySelector(selector);
+      if (target) lenis.scrollTo(target, { duration: reducedMotion ? 0 : 1.2 });
     };
 
     window.addEventListener("lenis:scroll-to", onAnchorRequest as EventListener);
 
     return () => {
       window.removeEventListener("lenis:scroll-to", onAnchorRequest as EventListener);
-      gsap.ticker.remove(tick);
-      lenis.off("scroll", updateScrollTrigger);
+      lenis.off("scroll", syncScroll);
+      gsap.ticker.remove(raf);
       lenis.destroy();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
       if (window.__lenis === lenis) delete window.__lenis;
     };
   }, []);

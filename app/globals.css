@@ -23,17 +23,24 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  background: #000;
 }
 
 body {
   cursor: none;
-  background-color: #fff7f3;
-  color: #2b1b14;
-  background-image:
-    radial-gradient(rgba(255, 111, 174, 0.08) 1px, transparent 1px),
-    radial-gradient(rgba(167, 230, 198, 0.08) 1px, transparent 1px);
-  background-position: 0 0, 22px 22px;
-  background-size: 44px 44px;
+  color: #f1f1f1;
+  background-color: #000;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
 }
 
 a,
@@ -45,15 +52,15 @@ button {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 120;
+  z-index: 160;
   width: 24px;
   height: 24px;
   border-radius: 999px;
   pointer-events: none;
-  background: rgba(255, 111, 174, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 24px rgba(255, 111, 174, 0.42);
-  backdrop-filter: blur(6px);
+  background: rgba(241, 241, 241, 0.18);
+  border: 1px solid rgba(241, 241, 241, 0.75);
+  box-shadow: 0 0 24px rgba(241, 241, 241, 0.2);
+  backdrop-filter: blur(5px);
   transition: width 0.24s ease, height 0.24s ease, background-color 0.24s ease;
   will-change: transform, width, height;
 }
@@ -61,7 +68,7 @@ button {
 .custom-cursor.is-hover {
   width: 72px;
   height: 72px;
-  background: rgba(167, 230, 198, 0.26);
+  background: rgba(241, 241, 241, 0.1);
 }
 
 @media (pointer: coarse) {

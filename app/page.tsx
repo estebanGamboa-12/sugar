@@ -5,7 +5,7 @@ import { useRef } from "react";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import HorizontalGallery from "@/components/HorizontalGallery";
-import MenuChapters from "@/components/MenuChapters";
+import MenuTabs from "@/components/MenuTabs";
 import Philosophy from "@/components/Philosophy";
 
 export default function Page() {
@@ -40,7 +40,7 @@ export default function Page() {
         </section>
 
         <section id="collection" className="relative bg-lavender text-cocoa">
-          <MenuChapters />
+          <MenuTabs />
         </section>
       </motion.main>
 

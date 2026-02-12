@@ -6,8 +6,6 @@ import ScrollyRail from "@/components/ScrollyRail";
 import Reveal from "@/components/Reveal";
 import Dock from "@/components/Dock";
 
-const specials = ["Tarta de cacao", "Crujiente de avellana", "Brioche tostado", "Café geisha", "Pre-postre cítrico", "Petit fours"];
-
 export default function Page() {
   return (
     <SmoothScroll>
@@ -15,42 +13,27 @@ export default function Page() {
         <CustomCursor />
         <ScrollyRail />
 
-        <section id="bento" className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-36">
-          <Reveal className="grid gap-12 md:grid-cols-12" from="left">
+        <section id="bento" className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-32">
+          <Reveal className="grid gap-10 md:grid-cols-12" from="left">
             <div className="md:col-span-5">
-              <p className="text-xs uppercase tracking-[0.26em] text-white/50">Editorial Chapters</p>
-              <h2 className="mt-4 font-display text-[clamp(2.2rem,6vw,5.2rem)] leading-[0.9]">Espacio, silencio y precisión.</h2>
+              <p className="text-xs uppercase tracking-[0.26em] text-[#efe0c2]/68">After Story</p>
+              <h2 className="mt-4 font-display text-[clamp(2rem,5vw,4.4rem)] leading-[0.92]">Continúa la experiencia en formato íntimo.</h2>
             </div>
             <p className="text-lg leading-relaxed text-white/74 md:col-span-7">
-              Noir Atelier plantea un recorrido pausado: luz mínima, materia prima de temporada y una coreografía de pases íntimos. El menú cambia por capítulos para respetar
-              cada ingrediente en su punto.
+              Menú de 14 plazas por noche. Capítulos cortos, maridaje opcional y servicio sincronizado para mantener temperatura, ritmo y silencio visual.
             </p>
           </Reveal>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 pb-24 md:px-10 md:pb-32">
-          <Reveal className="rounded-[2rem] border border-white/12 bg-white/[0.03] p-6 md:p-10" from="bottom">
-            <h3 className="font-display text-[clamp(2rem,5vw,4.6rem)] leading-[0.9]">Post-Rail Bento</h3>
-            <div className="mt-8 grid gap-4 md:grid-cols-12">
-              {specials.map((item) => (
-                <article key={item} className="rounded-3xl border border-white/14 bg-black/50 p-5 transition-transform duration-300 hover:-translate-y-1 md:col-span-4" data-cursor="hover" data-magnet>
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/45">Selection</p>
-                  <p className="mt-3 text-xl text-white/90">{item}</p>
-                </article>
-              ))}
-            </div>
-          </Reveal>
-        </section>
-
-        <section id="visit" className="mx-auto max-w-7xl px-6 pb-24 md:px-10 md:pb-32">
+        <section id="visit" className="mx-auto max-w-7xl px-6 pb-28 md:px-10 md:pb-32">
           <Reveal className="grid gap-6 md:grid-cols-12" from="right">
             <div className="overflow-hidden rounded-[1.8rem] border border-white/14 md:col-span-7">
               <img src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1800&q=80" alt="Comedor editorial" className="h-[56vh] w-full object-cover" />
             </div>
             <div className="rounded-[1.8rem] border border-white/14 bg-white/[0.04] p-7 md:col-span-5 md:p-10">
-              <p className="text-xs uppercase tracking-[0.23em] text-white/55">Press Notes</p>
-              <h3 className="mt-4 font-display text-[clamp(2rem,4.6vw,4.2rem)] leading-[0.9]">Servicio de 14 plazas.</h3>
-              <p className="mt-4 text-white/74">El equipo abre dos turnos por noche para cuidar ritmo, temperatura y emplatado. Cada reserva se acompaña con maridaje opcional por capítulo.</p>
+              <p className="text-xs uppercase tracking-[0.23em] text-[#efe0c2]/70">Visit</p>
+              <h3 className="mt-4 font-display text-[clamp(1.8rem,4.4vw,3.8rem)] leading-[0.92]">Madrid · Barrio de las Letras.</h3>
+              <p className="mt-4 text-white/74">Miércoles a domingo, dos turnos por noche. Reservas privadas disponibles para celebraciones de formato reducido.</p>
             </div>
           </Reveal>
         </section>

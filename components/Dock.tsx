@@ -23,7 +23,8 @@ export default function Dock() {
 
     const onScene = (event: Event) => {
       const detail = (event as CustomEvent<{ sceneIndex: number }>).detail;
-      setSceneIndex(detail?.sceneIndex ?? 1);
+      setSceneIndex(Math.min(8, Math.max(1, detail?.sceneIndex ?? 1)));
+      setActive("story");
     };
 
     const onScroll = () => {
@@ -35,7 +36,7 @@ export default function Dock() {
         const rect = element.getBoundingClientRect();
         return rect.top < window.innerHeight * 0.45 && rect.bottom > window.innerHeight * 0.2;
       });
-      if (winner) setActive(winner);
+      setActive(winner ?? "story");
     };
 
     window.addEventListener("rail-active", onRail as EventListener);
@@ -51,16 +52,24 @@ export default function Dock() {
   }, []);
 
   return (
-    <nav className="fixed bottom-4 left-1/2 z-50 w-[min(96vw,560px)] -translate-x-1/2 rounded-full border border-white/20 bg-black/70 p-2 backdrop-blur-md">
-      <ul className="grid grid-cols-3 gap-2 text-center text-[10px] uppercase tracking-[0.22em] text-white/86">
-        {dockItems.map((item) => (
-          <li key={item.key}>
-            <a data-cursor="link" data-magnet href={item.href} className={`block rounded-full py-3 transition ${active === item.key ? "bg-white/16 text-white" : "hover:bg-white/10"}`}>
-              {item.key === "story" ? `${item.label} ${String(sceneIndex).padStart(2, "0")}` : item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <nav className="dock-settle fixed bottom-4 left-1/2 z-[90] w-[min(96vw,620px)] -translate-x-1/2 rounded-full border border-white/20 bg-black/72 p-2 backdrop-blur-md">
+      <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+        <ul className="grid grid-cols-3 gap-2 text-center text-[10px] uppercase tracking-[0.22em] text-white/86">
+          {dockItems.map((item) => (
+            <li key={item.key}>
+              <a data-cursor="link" data-magnet href={item.href} className={`block rounded-full py-3 transition ${active === item.key ? "bg-white/16 text-white" : "hover:bg-white/10"}`}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-2 py-1.5">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <span key={index} className={`h-1.5 w-1.5 rounded-full transition-all ${sceneIndex === index + 1 ? "bg-[#efe0c2]" : "bg-white/28"}`} />
+          ))}
+        </div>
+      </div>
     </nav>
   );
 }

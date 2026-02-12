@@ -2,12 +2,7 @@
 
 type GSAPTimeline = {
   to: (target: unknown, vars?: Record<string, unknown>, position?: string | number) => GSAPTimeline;
-  fromTo: (
-    target: unknown,
-    fromVars: Record<string, unknown>,
-    toVars: Record<string, unknown>,
-    position?: string | number,
-  ) => GSAPTimeline;
+  fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => GSAPTimeline;
   addLabel: (label: string, position?: string | number) => GSAPTimeline;
   add: (callback: () => void, position?: string | number) => GSAPTimeline;
 };
@@ -17,6 +12,7 @@ type ScrollTriggerInstance = {
   progress: number;
   start: number;
   end: number;
+  getVelocity: () => number;
   kill: () => void;
 };
 
@@ -31,44 +27,42 @@ type GSAPWindow = {
   context: (fn: () => void | (() => void), scope?: unknown) => { revert: () => void };
   set: (targets: unknown, vars: Record<string, unknown>) => void;
   timeline: (vars?: Record<string, unknown>) => GSAPTimeline;
-  quickTo: (target: Element, prop: string, vars: Record<string, unknown>) => (value: number) => void;
-  fromTo: (
-    target: unknown,
-    fromVars: Record<string, unknown>,
-    toVars: Record<string, unknown>,
-    position?: string | number,
-  ) => GSAPTimeline;
   to: (target: unknown, vars: Record<string, unknown>) => void;
+  fromTo: (target: unknown, fromVars: Record<string, unknown>, toVars: Record<string, unknown>, position?: string | number) => GSAPTimeline;
 };
 
 type ScrollTriggerWindow = {
   update: () => void;
   refresh: () => void;
   create: (vars: Record<string, unknown>) => ScrollTriggerInstance;
-  addEventListener: (event: "scrollEnd", callback: () => void) => void;
-  removeEventListener: (event: "scrollEnd", callback: () => void) => void;
+};
+
+type FlipWindow = {
+  getState: (target: Element | Element[] | NodeListOf<Element>) => unknown;
+  from: (state: unknown, vars: Record<string, unknown>) => void;
 };
 
 declare global {
   interface Window {
     gsap: GSAPWindow;
     ScrollTrigger: ScrollTriggerWindow;
+    Flip: FlipWindow;
   }
 }
 
 let pluginRegistered = false;
 
 export function getGSAP() {
-  if (!window.gsap || !window.ScrollTrigger) {
-    throw new Error("GSAP/ScrollTrigger no están disponibles en window.");
+  if (!window.gsap || !window.ScrollTrigger || !window.Flip) {
+    throw new Error("GSAP/ScrollTrigger/Flip no están disponibles en window.");
   }
 
   if (!pluginRegistered) {
-    window.gsap.registerPlugin(window.ScrollTrigger);
+    window.gsap.registerPlugin(window.ScrollTrigger, window.Flip);
     pluginRegistered = true;
   }
 
-  return { gsap: window.gsap, ScrollTrigger: window.ScrollTrigger };
+  return { gsap: window.gsap, ScrollTrigger: window.ScrollTrigger, Flip: window.Flip };
 }
 
 export const setupGSAP = getGSAP;

@@ -16,8 +16,8 @@ export default function CustomCursor() {
     }
 
     const { gsap } = getGSAP();
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3.out" });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.24, ease: "power3.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.24, ease: "power3.out" });
 
     const onMove = (e: MouseEvent) => {
       xTo(e.clientX - 12);
@@ -26,13 +26,19 @@ export default function CustomCursor() {
 
     const cleanups: Array<() => void> = [];
 
-    document.querySelectorAll('[data-cursor="link"], [data-cursor="hover"], [data-magnet]').forEach((el) => {
-      const qx = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
-      const qy = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+    document.querySelectorAll('[data-cursor], [data-magnet]').forEach((el) => {
+      const qx = gsap.quickTo(el, "x", { duration: 0.32, ease: "power3.out" });
+      const qy = gsap.quickTo(el, "y", { duration: 0.32, ease: "power3.out" });
 
-      const onEnter = () => cursor.classList.add("is-hover");
+      const onEnter = () => {
+        const mode = (el as HTMLElement).getAttribute("data-cursor") || "hover";
+        cursor.dataset.mode = mode;
+        cursor.classList.add("is-hover");
+      };
+
       const onLeave = () => {
         cursor.classList.remove("is-hover");
+        delete cursor.dataset.mode;
         qx(0);
         qy(0);
       };
@@ -41,8 +47,8 @@ export default function CustomCursor() {
         if (!(el instanceof HTMLElement) || !el.hasAttribute("data-magnet")) return;
         const e = event as MouseEvent;
         const rect = el.getBoundingClientRect();
-        const mx = (e.clientX - (rect.left + rect.width / 2)) * 0.2;
-        const my = (e.clientY - (rect.top + rect.height / 2)) * 0.2;
+        const mx = (e.clientX - (rect.left + rect.width / 2)) * 0.14;
+        const my = (e.clientY - (rect.top + rect.height / 2)) * 0.14;
         qx(mx);
         qy(my);
       };

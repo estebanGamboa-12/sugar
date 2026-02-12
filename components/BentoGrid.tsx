@@ -1,40 +1,23 @@
-import Image from "next/image";
 import Reveal from "@/components/Reveal";
 
-const items = [
-  {
-    title: "Fresh Daily",
-    desc: "Horneamos cada mañana en pequeños lotes para textura perfecta.",
-    img: "https://images.unsplash.com/photo-1483695028939-5bb13f8648b0?auto=format&fit=crop&w=1200&q=80",
-    className: "md:col-span-7 md:row-span-2 min-h-[410px]",
-  },
-  {
-    title: "Cultured Butter",
-    desc: "Mantequilla premium para capas crujientes y aroma profundo.",
-    img: "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=1200&q=80",
-    className: "md:col-span-5 min-h-[195px]",
-  },
-  {
-    title: "Seasonal Specials",
-    desc: "Especiales de temporada con frutas frescas y cremas ligeras.",
-    img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=80",
-    className: "md:col-span-5 min-h-[195px]",
-  },
+const cards = [
+  { title: "Especialidad", value: "Entremet de avellana + cacao de origen.", span: "md:col-span-6" },
+  { title: "Horarios", value: "Mié–Dom / 13:00–23:30", span: "md:col-span-3" },
+  { title: "Ubicación", value: "Calle de la Miel 18, Madrid", span: "md:col-span-3" },
+  { title: "Reservas", value: "+34 91 444 1122", span: "md:col-span-4" },
+  { title: "Reseñas", value: "4.9 / 5 · 380 opiniones", span: "md:col-span-4" },
+  { title: "Instagram", value: "@atelier.sucre", span: "md:col-span-4" },
 ];
 
 export default function BentoGrid() {
   return (
-    <section className="bg-cream px-5 py-20 md:px-12">
-      <div className="mx-auto grid w-full max-w-6xl gap-4 md:grid-cols-12 md:grid-rows-2">
-        {items.map((item, index) => (
-          <Reveal key={item.title} delay={index * 0.08} className={`${item.className} group relative overflow-hidden rounded-[30px] bg-white p-5 shadow-soft-lg`}>
-            <Image src={item.img} alt={item.title} fill className="object-cover transition duration-700 group-hover:scale-105" sizes="(min-width: 768px) 50vw, 100vw" />
-            <div className="absolute inset-0 bg-gradient-to-t from-cocoa/85 via-cocoa/30 to-transparent" />
-            <div className="relative z-10 flex h-full flex-col justify-end">
-              <p className="font-display text-xs uppercase tracking-[0.3em] text-white/70">bakery note</p>
-              <h3 className="mt-3 text-2xl font-bold text-white">{item.title}</h3>
-              <p className="mt-2 max-w-sm text-sm text-white/85">{item.desc}</p>
-            </div>
+    <section className="px-6 py-28 md:px-12">
+      <h2 className="mb-10 text-[clamp(2rem,6.4vw,5rem)] font-semibold tracking-tight">Bento Menu</h2>
+      <div className="grid gap-4 md:grid-cols-12">
+        {cards.map((card) => (
+          <Reveal key={card.title} className={`${card.span} rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:p-8`}>
+            <p className="font-display text-[10px] uppercase tracking-[0.24em] text-white/50">{card.title}</p>
+            <p className="mt-5 text-xl tracking-tight text-white/92 md:text-2xl">{card.value}</p>
           </Reveal>
         ))}
       </div>

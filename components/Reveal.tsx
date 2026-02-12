@@ -1,61 +1,49 @@
 "use client";
 
-import { useReducedMotion } from "framer-motion";
-import { useLayoutEffect, useRef } from "react";
-import { setupGSAP } from "@/lib/gsap";
+import { ReactNode, useLayoutEffect, useRef } from "react";
+import { getGSAP } from "@/lib/gsap";
 
 type RevealProps = {
-  children: React.ReactNode;
-  delay?: number;
-  duration?: number;
-  y?: number;
-  once?: boolean;
+  children: ReactNode;
   className?: string;
 };
 
-export default function Reveal({
-  children,
-  delay = 0,
-  duration = 0.9,
-  y = 36,
-  once = true,
-  className,
-}: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
+export default function Reveal({ children, className }: RevealProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    if (!ref.current || reducedMotion) return;
-    const { gsap } = setupGSAP();
+    const node = rootRef.current;
+    if (!node) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    const { gsap } = getGSAP();
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        ref.current,
+        node,
+        { clipPath: "inset(0% 0% 100% 0% round 1.5rem)", opacity: 0.8, y: 20 },
         {
-          clipPath: "inset(0% 0% 100% 0% round 24px)",
-          y,
-          opacity: 0,
-        },
-        {
-          clipPath: "inset(0% 0% 0% 0% round 24px)",
-          y: 0,
+          clipPath: "inset(0% 0% 0% 0% round 1.5rem)",
           opacity: 1,
-          duration,
-          delay,
-          ease: "power3.out",
+          y: 0,
+          duration: 1,
+          ease: "power2.out",
           scrollTrigger: {
-            trigger: ref.current,
-            start: "top 85%",
-            once,
+            trigger: node,
+            start: "top 82%",
+            invalidateOnRefresh: true,
           },
         },
       );
-    }, ref);
+    }, rootRef);
 
     return () => ctx.revert();
-  }, [delay, duration, once, reducedMotion, y]);
+  }, []);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={rootRef} className={className}>
       {children}
     </div>
   );

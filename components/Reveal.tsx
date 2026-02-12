@@ -8,9 +8,10 @@ type RevealProps = {
   className?: string;
   rounded?: string;
   from?: "bottom" | "left" | "right";
+  delay?: number;
 };
 
-export default function Reveal({ children, className = "", rounded = "1.5rem", from = "bottom" }: RevealProps) {
+export default function Reveal({ children, className = "", rounded = "1.5rem", from = "bottom", delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -45,6 +46,7 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
           scale: 1,
           clipPath: `inset(0% 0% 0% 0% round ${rounded})`,
           duration: 0.9,
+          delay,
           ease: "power2.out",
           scrollTrigger: {
             trigger: node,
@@ -56,11 +58,7 @@ export default function Reveal({ children, className = "", rounded = "1.5rem", f
     }, node);
 
     return () => ctx.revert();
-  }, [rounded, from]);
+  }, [rounded, from, delay]);
 
-  return (
-    <div ref={ref} className={className}>
-      {children}
-    </div>
-  );
+  return <div ref={ref} className={className}>{children}</div>;
 }

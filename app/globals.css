@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fffaf5;
-  --foreground: #2f1b1f;
+  --background: #050505;
+  --foreground: #f5f5f5;
 }
 
 @theme inline {
@@ -18,11 +18,16 @@ html,
 body {
   margin: 0;
   padding: 0;
-}
-
-body {
-  min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: "Manrope", "Inter", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.font-syncopate {
+  font-family: "Syncopate", "Eurostile", "Arial Black", sans-serif;
+}
+
+a,
+button {
+  cursor: none;
 }

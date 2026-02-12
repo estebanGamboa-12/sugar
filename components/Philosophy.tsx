@@ -13,8 +13,8 @@ type PhraseProps = {
 
 function PhraseLayer({ text, index, progress }: PhraseProps) {
   const start = index / statements.length;
-  const peak = start + 0.18;
-  const end = start + 0.34;
+  const peak = Math.min(start + 0.18, 1);
+  const end = Math.min(start + 0.34, 1);
 
   const opacity = useTransform(progress, [start, peak, end], [0, 1, 0]);
   const blur = useTransform(progress, [start, peak, end], [18, 0, 18]);

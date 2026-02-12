@@ -28,6 +28,12 @@ const faq = [
   },
 ];
 
+const quotes = [
+  "“Noir Atelier convierte cada pase en una secuencia: estética precisa, técnica limpia y un servicio impecable.” — Hoja de Sala",
+  "“Una de las propuestas más sólidas del año en Madrid: profundidad de sabor, identidad visual y ritmo de autor.” — Diario Gourmet",
+  "“La casa que demuestra que la pastelería contemporánea puede ser íntima, cinematográfica y memorable.” — Press Table",
+];
+
 export default function HomePage() {
   return (
     <SmoothScroll>
@@ -50,7 +56,7 @@ export default function HomePage() {
         </section>
 
         <section id="menu" className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
-          <Reveal className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10">
+          <Reveal className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-10" rounded="2rem">
             <h3 className="font-display text-[clamp(2rem,5vw,4.2rem)] leading-[0.9]">Menu / Specials</h3>
             <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-12">
               {specials.map((item, index) => (
@@ -64,6 +70,34 @@ export default function HomePage() {
                   <p className="mt-3 text-xl text-white/92">{item}</p>
                 </article>
               ))}
+            </div>
+          </Reveal>
+        </section>
+
+        <section id="story" className="mx-auto max-w-6xl px-6 py-20 md:px-10 md:py-36">
+          <Reveal className="space-y-16" rounded="2rem">
+            <div className="max-w-2xl space-y-5">
+              <p className="text-xs uppercase tracking-[0.26em] text-white/45">Our Story / Ingredients</p>
+              <h3 className="font-display text-[clamp(2.4rem,7vw,6rem)] leading-[0.9]">Origen, estación y paciencia.</h3>
+            </div>
+            <div className="grid gap-12 md:grid-cols-12">
+              <p className="text-lg leading-relaxed text-white/74 md:col-span-7">
+                Trabajamos con lotes pequeños, cacao de origen, mantequillas de temporada y fruta en punto de maduración.
+                El menú cambia por capítulos: cada ingrediente entra cuando su perfil aromático está listo y desaparece
+                antes de repetirse. Por eso dejamos espacio entre platos, entre voces y entre luces: para que el paladar
+                y la memoria respiren.
+              </p>
+              <div className="space-y-4 md:col-span-5 md:pt-10">
+                <p className="rounded-3xl border border-white/12 bg-white/[0.03] p-5 text-sm uppercase tracking-[0.18em] text-white/72">
+                  Harinas vivas · fermentación lenta · horno de piedra.
+                </p>
+                <p className="rounded-3xl border border-white/12 bg-white/[0.03] p-5 text-sm uppercase tracking-[0.18em] text-white/72">
+                  Cítricos de costa · frutos secos tostados al momento.
+                </p>
+                <p className="rounded-3xl border border-white/12 bg-white/[0.03] p-5 text-sm uppercase tracking-[0.18em] text-white/72">
+                  Mise en place de precisión · pase íntimo de 18 cubiertos.
+                </p>
+              </div>
             </div>
           </Reveal>
         </section>
@@ -85,15 +119,29 @@ export default function HomePage() {
         </section>
 
         <section id="location" className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
-          <Reveal className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02] p-8 md:p-14">
+          <Reveal className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02] p-8 md:p-14" rounded="2rem">
             <p className="text-xs uppercase tracking-[0.25em] text-white/50">Location</p>
             <h3 className="mt-4 font-display text-[clamp(2.2rem,6vw,5rem)] leading-[0.9]">Calle de las Letras, 27 · Madrid</h3>
             <div className="mt-8 h-[40vh] rounded-3xl border border-white/15 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
           </Reveal>
         </section>
 
+        <section id="press" className="mx-auto max-w-6xl px-6 pb-24 md:px-10 md:pb-32">
+          <Reveal className="space-y-8 rounded-[2rem] border border-white/12 bg-white/[0.03] p-8 md:p-12" rounded="2rem">
+            <p className="text-xs uppercase tracking-[0.25em] text-white/50">Reviews / Press</p>
+            <h3 className="font-display text-[clamp(2.2rem,6vw,5rem)] leading-[0.9]">Voces que entienden el ritmo.</h3>
+            <div className="space-y-5">
+              {quotes.map((quote) => (
+                <blockquote key={quote} className="rounded-3xl border border-white/12 bg-black/60 p-6 text-xl leading-relaxed text-white/84">
+                  {quote}
+                </blockquote>
+              ))}
+            </div>
+          </Reveal>
+        </section>
+
         <section className="mx-auto max-w-6xl px-6 pb-44 md:px-10">
-          <Reveal className="rounded-[2.5rem] border border-white/15 bg-white/[0.04] p-8 text-center md:p-16">
+          <Reveal className="rounded-[2.5rem] border border-white/15 bg-white/[0.04] p-8 text-center md:p-16" rounded="2.5rem">
             <p className="text-xs uppercase tracking-[0.25em] text-white/45">Último paso</p>
             <h3 className="mt-5 font-display text-[clamp(2.2rem,8vw,6.5rem)] leading-[0.9]">Reserva tu mesa o diseña tu encargo.</h3>
             <p className="mx-auto mt-4 max-w-2xl text-white/70">Plazas limitadas por servicio. Encargos con antelación mínima de 72h.</p>

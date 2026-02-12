@@ -10,28 +10,25 @@ export default function CustomCursor() {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isTouch || reduced) {
+    if (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       cursor.style.display = "none";
       return;
     }
 
     const { gsap } = getGSAP();
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3.out" });
 
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.28, ease: "power3.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.28, ease: "power3.out" });
-
-    const onMove = (event: MouseEvent) => {
-      xTo(event.clientX - 12);
-      yTo(event.clientY - 12);
+    const onMove = (e: MouseEvent) => {
+      xTo(e.clientX - 12);
+      yTo(e.clientY - 12);
     };
 
-    const magneticCleanup: Array<() => void> = [];
+    const cleanups: Array<() => void> = [];
 
-    const bindMagnet = (el: Element) => {
-      const qx = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" });
-      const qy = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" });
+    document.querySelectorAll('[data-cursor="link"], [data-cursor="hover"], [data-magnet]').forEach((el) => {
+      const qx = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
+      const qy = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
 
       const onEnter = () => cursor.classList.add("is-hover");
       const onLeave = () => {
@@ -40,34 +37,32 @@ export default function CustomCursor() {
         qy(0);
       };
 
-      const onMoveMagnet = (event: Event) => {
+      const onMagnetMove = (event: Event) => {
+        if (!(el instanceof HTMLElement) || !el.hasAttribute("data-magnet")) return;
         const e = event as MouseEvent;
-        const rect = (el as HTMLElement).getBoundingClientRect();
-        const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.22;
-        const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.22;
-        qx(dx);
-        qy(dy);
+        const rect = el.getBoundingClientRect();
+        const mx = (e.clientX - (rect.left + rect.width / 2)) * 0.2;
+        const my = (e.clientY - (rect.top + rect.height / 2)) * 0.2;
+        qx(mx);
+        qy(my);
       };
 
       el.addEventListener("mouseenter", onEnter);
       el.addEventListener("mouseleave", onLeave);
-      el.addEventListener("mousemove", onMoveMagnet);
+      el.addEventListener("mousemove", onMagnetMove);
 
-      magneticCleanup.push(() => {
+      cleanups.push(() => {
         el.removeEventListener("mouseenter", onEnter);
         el.removeEventListener("mouseleave", onLeave);
-        el.removeEventListener("mousemove", onMoveMagnet);
+        el.removeEventListener("mousemove", onMagnetMove);
       });
-    };
-
-    const magnetTargets = document.querySelectorAll('[data-cursor="link"]');
-    magnetTargets.forEach(bindMagnet);
+    });
 
     window.addEventListener("mousemove", onMove);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
-      magneticCleanup.forEach((fn) => fn());
+      cleanups.forEach((cleanup) => cleanup());
     };
   }, []);
 

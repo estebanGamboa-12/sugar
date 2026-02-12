@@ -26,6 +26,9 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     if (!window.Lenis || !window.gsap || !window.ScrollTrigger) return;
 
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    if (!isDesktop) return;
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const { gsap, ScrollTrigger } = setupGSAP();
 

@@ -62,7 +62,7 @@ export default function HomePage() {
               {specials.map((item, index) => (
                 <article
                   key={item}
-                  className="group rounded-3xl border border-white/12 bg-black/60 p-5 md:col-span-4"
+                  className="group rounded-3xl border border-white/12 bg-black/60 p-5 transition-transform duration-300 hover:scale-[1.01] md:col-span-4"
                   data-cursor="hover"
                   data-magnet
                 >
@@ -122,7 +122,7 @@ export default function HomePage() {
           <Reveal className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02] p-8 md:p-14" rounded="2rem">
             <p className="text-xs uppercase tracking-[0.25em] text-white/50">Location</p>
             <h3 className="mt-4 font-display text-[clamp(2.2rem,6vw,5rem)] leading-[0.9]">Calle de las Letras, 27 · Madrid</h3>
-            <div className="mt-8 h-[40vh] rounded-3xl border border-white/15 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center" />
+            <div className="mt-8 h-[40vh] rounded-3xl border border-white/15 bg-[url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1400&q=80')] bg-cover bg-center transition-transform duration-300 hover:scale-[1.01]" />
           </Reveal>
         </section>
 

@@ -9,7 +9,11 @@ declare global {
       on: (event: "scroll", callback: () => void) => void;
       off: (event: "scroll", callback: () => void) => void;
       raf: (time: number) => void;
+      scrollTo: (target: number | string | Element, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void;
       destroy: () => void;
+    };
+    __lenis?: {
+      scrollTo: (target: number, options?: { duration?: number; easing?: (t: number) => number; immediate?: boolean }) => void;
     };
   }
 }
@@ -28,24 +32,24 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       smoothTouch: false,
     });
 
-    const tick = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
     const refresh = () => ScrollTrigger.refresh();
 
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add(tick);
+    const tickerCallback = (time: number) => lenis.raf(time * 1000);
+
+    gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
+    window.__lenis = lenis;
     requestAnimationFrame(() => ScrollTrigger.refresh());
 
     document.fonts?.ready.then(refresh);
     window.addEventListener("load", refresh);
 
     return () => {
-      gsap.ticker.remove(tick);
+      gsap.ticker.remove(tickerCallback);
       lenis.off("scroll", ScrollTrigger.update);
       window.removeEventListener("load", refresh);
+      window.__lenis = undefined;
       lenis.destroy();
     };
   }, []);

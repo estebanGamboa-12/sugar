@@ -24,27 +24,28 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 110;
   width: 24px;
   height: 24px;
   border-radius: 999px;
   pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
-  transition: width 200ms ease, height 200ms ease, background-color 200ms ease;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.11);
+  backdrop-filter: blur(6px);
+  transition: width 220ms ease, height 220ms ease, background-color 220ms ease, border-color 220ms ease;
 }
 
 .custom-cursor.is-hover {
-  width: 70px;
-  height: 70px;
+  width: 62px;
+  height: 62px;
   background: rgba(255, 255, 255, 0.06);
 }
 
-@media (pointer: coarse) {
-  .custom-cursor {
-    display: none;
-  }
+.custom-cursor[data-mode="link"].is-hover {
+  width: 76px;
+  height: 76px;
+  border-color: rgba(241, 223, 191, 0.95);
+  background: rgba(241, 223, 191, 0.12);
 }
 
 .story-grain::before {
@@ -53,8 +54,14 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.08;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.26) 0.5px, transparent 0.5px);
+  opacity: 0.06;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.24) 0.45px, transparent 0.45px);
   background-size: 2px 2px;
   mix-blend-mode: soft-light;
+}
+
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
 }

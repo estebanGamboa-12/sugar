@@ -9,6 +9,7 @@ type GSAPTimeline = {
     position?: string | number,
   ) => GSAPTimeline;
   addLabel: (label: string, position?: string | number) => GSAPTimeline;
+  add: (callback: () => void, position?: string | number) => GSAPTimeline;
 };
 
 type ScrollTriggerInstance = {

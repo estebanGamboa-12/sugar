@@ -7,9 +7,10 @@ type RevealProps = {
   children: ReactNode;
   className?: string;
   rounded?: string;
+  from?: "bottom" | "left" | "right";
 };
 
-export default function Reveal({ children, className = "", rounded = "1.5rem" }: RevealProps) {
+export default function Reveal({ children, className = "", rounded = "1.5rem", from = "bottom" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -19,33 +20,43 @@ export default function Reveal({ children, className = "", rounded = "1.5rem" }:
     const { gsap } = getGSAP();
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
+    const fromVars =
+      from === "left"
+        ? { x: -30, clipPath: `inset(0% 0% 0% 100% round ${rounded})` }
+        : from === "right"
+          ? { x: 30, clipPath: `inset(0% 100% 0% 0% round ${rounded})` }
+          : {
+              y: 30,
+              clipPath: isMobile ? `inset(0% 0% 0% 0% round ${rounded})` : `inset(0% 0% 100% 0% round ${rounded})`,
+            };
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         node,
         {
           opacity: 0,
-          y: 36,
           scale: 0.99,
-          clipPath: isMobile ? `inset(0% 0% 0% 0% round ${rounded})` : `inset(0% 0% 100% 0% round ${rounded})`,
+          ...fromVars,
         },
         {
           opacity: 1,
+          x: 0,
           y: 0,
           scale: 1,
           clipPath: `inset(0% 0% 0% 0% round ${rounded})`,
-          duration: 0.85,
+          duration: 0.82,
           ease: "power2.out",
           scrollTrigger: {
             trigger: node,
-            start: "top 82%",
+            start: "top 84%",
             invalidateOnRefresh: true,
           },
         },
       );
-    }, ref);
+    }, node);
 
     return () => ctx.revert();
-  }, [rounded]);
+  }, [rounded, from]);
 
   return (
     <div ref={ref} className={className}>

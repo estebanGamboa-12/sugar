@@ -35,6 +35,8 @@ type ScrollTriggerWindow = {
   update: () => void;
   refresh: () => void;
   create: (vars: Record<string, unknown>) => ScrollTriggerInstance;
+  defaults: (vars: Record<string, unknown>) => void;
+  config: (vars: Record<string, unknown>) => void;
 };
 
 type FlipWindow = {
@@ -59,6 +61,8 @@ export function getGSAP() {
 
   if (!pluginRegistered) {
     window.gsap.registerPlugin(window.ScrollTrigger, window.Flip);
+    window.ScrollTrigger.defaults({ invalidateOnRefresh: true });
+    window.ScrollTrigger.config({ autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize" });
     pluginRegistered = true;
   }
 

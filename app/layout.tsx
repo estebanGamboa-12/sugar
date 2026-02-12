@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Syncopate } from "next/font/google";
+import { Manrope, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import Cursor from "@/components/Cursor";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -11,16 +11,15 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const syncopate = Syncopate({
+const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-syncopate",
-  weight: ["400", "700"],
+  variable: "--font-display-serif",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "The Sugar Lab · Immersive Experience",
-  description: "Awwwards-style motion design landing with cinematic layers, smooth scroll and premium interaction physics.",
+  description: "Landing page experiencial con scrollytelling, parallax y galería horizontal inspirada en Awwwards.",
 };
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="scroll-smooth">
-      <body className={`${manrope.variable} ${syncopate.variable} bg-black text-[#F1F1F1] antialiased`}>
+      <body className={`${manrope.variable} ${playfairDisplay.variable} bg-black text-[#F1F1F1] antialiased`}>
         <Script src="https://unpkg.com/lenis@1.3.13/dist/lenis.min.js" strategy="beforeInteractive" />
         <Script src="https://unpkg.com/gsap@3.13.0/dist/gsap.min.js" strategy="beforeInteractive" />
         <Script src="https://unpkg.com/gsap@3.13.0/dist/ScrollTrigger.min.js" strategy="beforeInteractive" />

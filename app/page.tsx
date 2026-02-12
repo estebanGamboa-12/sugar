@@ -22,8 +22,8 @@ export default function Page() {
               <h2 className="mt-4 font-display text-[clamp(2.2rem,6vw,5.2rem)] leading-[0.9]">Espacio, silencio y precisión.</h2>
             </div>
             <p className="text-lg leading-relaxed text-white/74 md:col-span-7">
-              Noir Atelier plantea un recorrido pausado: luz mínima, materia prima de temporada y una coreografía de pases íntimos.
-              El menú cambia por capítulos para respetar cada ingrediente en su punto. Lo que hoy está, mañana tal vez no vuelve.
+              Noir Atelier plantea un recorrido pausado: luz mínima, materia prima de temporada y una coreografía de pases íntimos. El menú cambia por capítulos para respetar
+              cada ingrediente en su punto.
             </p>
           </Reveal>
         </section>
@@ -42,8 +42,21 @@ export default function Page() {
           </Reveal>
         </section>
 
+        <section className="mx-auto max-w-7xl px-6 pb-24 md:px-10 md:pb-32">
+          <Reveal className="grid gap-6 md:grid-cols-12" from="right">
+            <div className="overflow-hidden rounded-[1.8rem] border border-white/14 md:col-span-7">
+              <img src="https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=1800&q=80" alt="Comedor editorial" className="h-[56vh] w-full object-cover" />
+            </div>
+            <div className="rounded-[1.8rem] border border-white/14 bg-white/[0.04] p-7 md:col-span-5 md:p-10">
+              <p className="text-xs uppercase tracking-[0.23em] text-white/55">Press Notes</p>
+              <h3 className="mt-4 font-display text-[clamp(2rem,4.6vw,4.2rem)] leading-[0.9]">Servicio de 14 plazas.</h3>
+              <p className="mt-4 text-white/74">El equipo abre dos turnos por noche para cuidar ritmo, temperatura y emplatado. Cada reserva se acompaña con maridaje opcional por capítulo.</p>
+            </div>
+          </Reveal>
+        </section>
+
         <section className="mx-auto max-w-6xl px-6 pb-40 md:px-10">
-          <Reveal className="rounded-[2.3rem] border border-white/15 bg-white/[0.05] p-8 text-center md:p-16" from="right">
+          <Reveal className="rounded-[2.3rem] border border-white/15 bg-white/[0.05] p-8 text-center md:p-16" from="bottom">
             <p className="text-xs uppercase tracking-[0.26em] text-white/45">Last Call</p>
             <h3 className="mt-5 font-display text-[clamp(2.5rem,8vw,6.7rem)] leading-[0.88]">Reserva o diseña tu encargo.</h3>
             <p className="mx-auto mt-4 max-w-2xl text-white/70">Aforo limitado por servicio. Encargos personalizados con 72h de antelación.</p>

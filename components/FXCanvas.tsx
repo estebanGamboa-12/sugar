@@ -14,9 +14,16 @@ type FXCanvasProps = {
   className?: string;
 };
 
-type DustParticle = { x: number; y: number; vx: number; vy: number; life: number; size: number };
+type Particle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number;
+  size: number;
+};
 
-const PARTICLE_COUNT = 90;
+const MAX_PARTICLES = 120;
 
 const FXCanvas = forwardRef<FXCanvasHandle, FXCanvasProps>(function FXCanvas({ disabled = false, className = "" }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,7 +32,7 @@ const FXCanvas = forwardRef<FXCanvasHandle, FXCanvasProps>(function FXCanvas({ d
   const intensityRef = useRef(0);
   const pointerRef = useRef({ x: 0.5, y: 0.5, active: false });
   const timeRef = useRef(0);
-  const particlesRef = useRef<DustParticle[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
 
   useImperativeHandle(ref, () => ({
     setScene(index) {
@@ -60,67 +67,78 @@ const FXCanvas = forwardRef<FXCanvasHandle, FXCanvasProps>(function FXCanvas({ d
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const seed = () => {
-      particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => ({
+    const seedDust = () => {
+      particlesRef.current = Array.from({ length: MAX_PARTICLES }, () => ({
         x: Math.random(),
         y: Math.random(),
-        vx: (Math.random() - 0.5) * 0.0008,
-        vy: (Math.random() - 0.5) * 0.0008,
+        vx: (Math.random() - 0.5) * 0.0009,
+        vy: (Math.random() - 0.5) * 0.0009,
         life: Math.random(),
-        size: 1 + Math.random() * 2,
+        size: 0.4 + Math.random() * 2,
       }));
     };
 
     const drawDust = (w: number, h: number, intensity: number) => {
       const pointer = pointerRef.current;
-      const particles = particlesRef.current;
       ctx.save();
       ctx.globalCompositeOperation = "screen";
-      for (const p of particles) {
-        p.life += 0.006;
-        p.x += p.vx + (pointer.active ? (pointer.x - p.x) * 0.0006 * intensity : 0);
-        p.y += p.vy + (pointer.active ? (pointer.y - p.y) * 0.0006 * intensity : 0);
 
-        if (p.x < 0 || p.x > 1 || p.y < 0 || p.y > 1 || p.life > 1.2) {
+      for (const p of particlesRef.current) {
+        p.life += 0.006;
+        p.x += p.vx + (pointer.active ? (pointer.x - p.x) * 0.0015 * intensity : 0);
+        p.y += p.vy + (pointer.active ? (pointer.y - p.y) * 0.0015 * intensity : 0);
+
+        if (p.x < 0 || p.x > 1 || p.y < 0 || p.y > 1 || p.life > 1.15) {
           p.x = Math.random();
           p.y = Math.random();
           p.life = 0;
         }
 
-        const alpha = Math.max(0, 0.16 * (1 - p.life) * intensity);
-        ctx.fillStyle = `rgba(255,244,224,${alpha})`;
+        const alpha = Math.max(0, (1 - p.life) * 0.22 * intensity);
+        ctx.fillStyle = `rgba(250,236,205,${alpha})`;
         ctx.beginPath();
         ctx.arc(p.x * w, p.y * h, p.size, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      if (pointer.active && intensity > 0.1) {
+        const px = pointer.x * w;
+        const py = pointer.y * h;
+        const halo = ctx.createRadialGradient(px, py, 8, px, py, 150 + 180 * intensity);
+        halo.addColorStop(0, `rgba(255,240,214,${0.14 * intensity})`);
+        halo.addColorStop(1, "rgba(255,240,214,0)");
+        ctx.fillStyle = halo;
+        ctx.fillRect(0, 0, w, h);
       }
       ctx.restore();
     };
 
     const drawSteam = (w: number, h: number, intensity: number, t: number) => {
-      const steamH = h * 0.36;
-      const y = h * 0.08;
-      const wave = Math.sin(t * 0.0018) * 14;
-      const grad = ctx.createLinearGradient(0, y, 0, y + steamH);
-      grad.addColorStop(0, `rgba(255,255,255,${0.1 * intensity})`);
+      const areaTop = h * 0.06;
+      const areaHeight = h * 0.38;
+      const wave = Math.sin(t * 0.0013) * 16;
+      const grad = ctx.createLinearGradient(0, areaTop, 0, areaTop + areaHeight);
+      grad.addColorStop(0, `rgba(255,255,255,${0.12 * intensity})`);
       grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.save();
+      ctx.filter = `blur(${14 + intensity * 16}px)`;
       ctx.fillStyle = grad;
-      ctx.filter = `blur(${16 + intensity * 12}px)`;
-      ctx.fillRect(0, y + wave, w, steamH);
-      ctx.filter = "none";
+      ctx.fillRect(0, areaTop + wave, w, areaHeight);
+      ctx.restore();
     };
 
-    const drawDrip = (w: number, h: number, intensity: number, t: number) => {
-      const top = h * 0.18;
-      const amp = 26 * intensity;
+    const drawChocolateDrip = (w: number, h: number, intensity: number, t: number) => {
+      const top = h * 0.13;
+      const amp = 28 * intensity;
       ctx.save();
-      ctx.globalAlpha = 0.22 * intensity;
-      ctx.fillStyle = "rgba(245,225,195,1)";
+      ctx.globalAlpha = 0.28 * intensity;
+      ctx.fillStyle = "rgba(241,225,198,1)";
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.lineTo(0, top);
-      for (let x = 0; x <= w; x += 28) {
-        const n = Math.sin((x * 0.018) + t * 0.0012) * amp;
-        ctx.lineTo(x, top + n);
+      for (let x = 0; x <= w; x += 24) {
+        const y = top + Math.sin(x * 0.016 + t * 0.0013) * amp + Math.cos(x * 0.008 + t * 0.0011) * (amp * 0.5);
+        ctx.lineTo(x, y);
       }
       ctx.lineTo(w, 0);
       ctx.closePath();
@@ -131,10 +149,9 @@ const FXCanvas = forwardRef<FXCanvasHandle, FXCanvasProps>(function FXCanvas({ d
     const drawSpotlight = (w: number, h: number, intensity: number) => {
       const px = pointerRef.current.x * w;
       const py = pointerRef.current.y * h;
-      const r = Math.max(w, h) * (0.16 + intensity * 0.14);
-      const grad = ctx.createRadialGradient(px, py, 20, px, py, r);
-      grad.addColorStop(0, `rgba(255,232,196,${0.18 * intensity})`);
-      grad.addColorStop(1, "rgba(255,232,196,0)");
+      const grad = ctx.createRadialGradient(px, py, 10, px, py, Math.max(w, h) * (0.22 + intensity * 0.16));
+      grad.addColorStop(0, `rgba(251,233,196,${0.18 * intensity})`);
+      grad.addColorStop(1, "rgba(251,233,196,0)");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
     };
@@ -150,19 +167,21 @@ const FXCanvas = forwardRef<FXCanvasHandle, FXCanvasProps>(function FXCanvas({ d
 
       if (scene === 0) drawDust(w, h, intensity);
       if (scene === 2) drawSteam(w, h, intensity, t);
-      if (scene === 3) drawDrip(w, h, intensity, t);
+      if (scene === 3) drawChocolateDrip(w, h, intensity, t);
       if (scene === 4) drawSpotlight(w, h, intensity);
 
       rafRef.current = requestAnimationFrame(render);
     };
 
     resize();
-    seed();
+    seedDust();
     rafRef.current = requestAnimationFrame(render);
     window.addEventListener("resize", resize);
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
       window.removeEventListener("resize", resize);
     };
   }, [disabled]);

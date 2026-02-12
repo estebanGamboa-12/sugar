@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/Badge';
 import { PriceTag } from '@/components/ui/PriceTag';
 
 const items = [
-  { src: '/images/noir/scene-4.jpg', name: 'Velvet Noir', price: '€54' },
-  { src: '/images/noir/scene-5.jpg', name: 'Ruby Veil', price: '€62' },
-  { src: '/images/noir/scene-6.jpg', name: 'Ivory Eclipse', price: '€58' },
-  { src: '/images/noir/scene-7.jpg', name: 'Midnight Bloom', price: '€66' }
+  { src: '/images/noir/scene-4.svg', name: 'Velvet Noir', price: '€54' },
+  { src: '/images/noir/scene-5.svg', name: 'Ruby Veil', price: '€62' },
+  { src: '/images/noir/scene-6.svg', name: 'Ivory Eclipse', price: '€58' },
+  { src: '/images/noir/scene-7.svg', name: 'Midnight Bloom', price: '€66' }
 ];
 
 export function Scene5Bento({ sectionRef, cardRefs }: { sectionRef: React.RefObject<HTMLElement | null>; cardRefs: React.MutableRefObject<HTMLDivElement[]> }) {

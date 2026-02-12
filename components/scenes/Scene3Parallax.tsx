@@ -9,7 +9,7 @@ export function Scene3Parallax({ sectionRef, imageRef, textRef }: { sectionRef: 
     <SceneShell id="scene-3" zIndex={30} className="min-h-screen" refProp={sectionRef}>
       <div className="grid min-h-screen items-center gap-8 py-16 md:grid-cols-2">
         <div ref={imageRef } className="relative h-[60vh] overflow-hidden rounded-lg border border-cream/20 will-change-transform">
-          <Image src="/images/noir/scene-2.jpg" alt="Detalle de glaseado" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+          <Image src="/images/noir/scene-2.svg" alt="Detalle de glaseado" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
         </div>
         <div ref={textRef } className="space-y-6 will-change-transform">
           <SectionLabel label="Parallax Split" />

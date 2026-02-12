@@ -12,7 +12,7 @@ export function Scene1Hero({ sectionRef, imageRef }: { sectionRef: React.RefObje
   return (
     <SceneShell id="scene-1" zIndex={10} className="min-h-screen" refProp={sectionRef}>
       <div ref={imageRef} className="absolute inset-0 will-change-transform">
-        <SceneBackground src="/images/noir/scene-1.jpg" alt="Atelier noir en penumbra" priority />
+        <SceneBackground src="/images/noir/scene-1.svg" alt="Atelier noir en penumbra" priority />
       </div>
       <NoiseOverlay />
       <VignetteOverlay />

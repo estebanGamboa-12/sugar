@@ -1,0 +1,17 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1920" height="1080" fill="#0D0B0A"/>
+  <ellipse cx="960" cy="560" rx="520" ry="250" fill="#1B1511"/>
+  <ellipse cx="960" cy="560" rx="430" ry="190" fill="#241A14"/>
+  <ellipse cx="960" cy="560" rx="340" ry="140" fill="#B58A58" fill-opacity="0.22"/>
+  <circle cx="860" cy="520" r="62" fill="#D1A06A" fill-opacity="0.85"/>
+  <circle cx="970" cy="500" r="48" fill="#E5C091" fill-opacity="0.8"/>
+  <circle cx="1060" cy="560" r="54" fill="#C98B5B" fill-opacity="0.82"/>
+  <circle cx="930" cy="610" r="40" fill="#F0D3AB" fill-opacity="0.72"/>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#g)"/>
+  <defs>
+    <radialGradient id="g" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(960 510) rotate(90) scale(640 960)">
+      <stop stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+</svg>

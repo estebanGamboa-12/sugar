@@ -25,8 +25,9 @@ export default function RestaurantExperience() {
   const scrollToSection = useCallback((selector: string) => {
     const el = document.querySelector(selector);
     if (!el) return;
-    if (typeof window !== "undefined" && (window as { lenis?: { scrollTo: (t: Element) => void } }).lenis) {
-      (window as { lenis: { scrollTo: (t: Element) => void } }).lenis.scrollTo(el, { offset: 0 });
+    const lenis = typeof window !== "undefined" ? (window as Window & { lenis?: { scrollTo: (target: string | number | HTMLElement, opts?: { offset?: number }) => void } }).lenis : undefined;
+    if (lenis && el instanceof HTMLElement) {
+      lenis.scrollTo(el, { offset: 0 });
     } else {
       el.scrollIntoView({ behavior: "smooth" });
     }

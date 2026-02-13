@@ -12,6 +12,20 @@ body {
 }
 
 body {
+  overflow-x: hidden;
   background: #ffffff;
   color: #111827;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

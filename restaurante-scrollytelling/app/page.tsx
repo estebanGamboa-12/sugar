@@ -1,17 +1,10 @@
-"use client";
-
-import dynamic from "next/dynamic";
-
-import SmoothScroll from "@/components/ui/SmoothScroll";
-
-const Experience = dynamic(() => import("@/components/sections/Experience"), {
-  ssr: false,
-});
+import SmoothScroll from "../components/ui/SmoothScroll";
+import RestaurantExperience from "../components/RestaurantExperience";
 
 export default function Home() {
   return (
     <SmoothScroll>
-      <Experience />
+      <RestaurantExperience />
     </SmoothScroll>
   );
 }

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #030303;
-  --foreground: #f6f1e9;
-  --gold: #d4af37;
-  --gold-soft: rgba(212, 175, 55, 0.55);
+  --background: #f6f1e9;
+  --foreground: #0a0a0a;
+  --cream: #faf8f5;
+  --accent: #0a0a0a;
 }
 
 @theme {
@@ -12,24 +12,12 @@
   --font-body: "Inter", "Segoe UI", sans-serif;
 }
 
-@utility preserve-3d {
-  transform-style: preserve-3d;
-}
-
-@utility perspective-1000 {
-  perspective: 1000px;
-}
-
-@utility backface-hidden {
-  backface-visibility: hidden;
-}
-
-@utility rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
 * {
   box-sizing: border-box;
+}
+
+html {
+  overflow-y: scroll;
 }
 
 html,
@@ -38,12 +26,7 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  background: radial-gradient(
-    circle at 20% 20%,
-    #0a0a0a 0%,
-    #030303 55%,
-    #000 100%
-  );
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
 }

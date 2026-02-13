@@ -34,6 +34,12 @@
       ],
       "gsap/ScrollTrigger": [
         "./lib/gsap-scrolltrigger"
+      ],
+      "@lenis/react": [
+        "./lib/lenis-react"
+      ],
+      "lenis": [
+        "./lib/lenis"
       ]
     }
   },

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { JSX, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 
 type Scene = 1 | 2 | 3 | 4 | 5;
 

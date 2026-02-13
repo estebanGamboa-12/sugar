@@ -1,251 +1,207 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, type MouseEvent } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+type Scene = 1 | 2 | 3 | 4 | 5;
 
-type DishCategory = "Entrantes" | "Mar" | "Tierra" | "Postres";
-
-interface Dish {
+interface BookSpread {
   id: number;
-  name: string;
-  category: DishCategory;
-  image: string;
+  title: string;
+  subtitle: string;
+  left: string[];
+  right: string[];
 }
 
-const dishes: Dish[] = [
-  { id: 1, name: "Ostra Gillardeau & Citrus", category: "Entrantes", image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?q=80&w=1200&auto=format&fit=crop" },
-  { id: 2, name: "Tartar de Atún Akami", category: "Entrantes", image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1200&auto=format&fit=crop" },
-  { id: 3, name: "Carpaccio de Wagyu A5", category: "Entrantes", image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=1200&auto=format&fit=crop" },
-  { id: 4, name: "Burrata Ahumada", category: "Entrantes", image: "https://images.unsplash.com/photo-1546549032-9571cd6b27df?q=80&w=1200&auto=format&fit=crop" },
-  { id: 5, name: "Foie Gras a la Brasa", category: "Entrantes", image: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=1200&auto=format&fit=crop" },
-  { id: 6, name: "Vieira Dorada", category: "Mar", image: "https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=1200&auto=format&fit=crop" },
-  { id: 7, name: "Langosta Thermidor", category: "Mar", image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" },
-  { id: 8, name: "Bacalao Confit", category: "Mar", image: "https://images.unsplash.com/photo-1611270634830-971ff4d20dd6?q=80&w=1200&auto=format&fit=crop" },
-  { id: 9, name: "Lubina en Mantequilla Noisette", category: "Mar", image: "https://images.unsplash.com/photo-1559847844-d721426d6edc?q=80&w=1200&auto=format&fit=crop" },
-  { id: 10, name: "Arroz de Carabinero", category: "Mar", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=1200&auto=format&fit=crop" },
-  { id: 11, name: "Solomillo Rossini", category: "Tierra", image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?q=80&w=1200&auto=format&fit=crop" },
-  { id: 12, name: "Cordero Lechal", category: "Tierra", image: "https://images.unsplash.com/photo-1529694157871-9a783f06d95f?q=80&w=1200&auto=format&fit=crop" },
-  { id: 13, name: "Pato Glaseado", category: "Tierra", image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=1200&auto=format&fit=crop" },
-  { id: 14, name: "Risotto de Trufa Negra", category: "Tierra", image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=1200&auto=format&fit=crop" },
-  { id: 15, name: "Pappardelle de Jabalí", category: "Tierra", image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=1200&auto=format&fit=crop" },
-  { id: 16, name: "Ravioli de Bogavante", category: "Tierra", image: "https://images.unsplash.com/photo-1516684669134-de6f7c473a2a?q=80&w=1200&auto=format&fit=crop" },
-  { id: 17, name: "Steak Tartar Imperial", category: "Tierra", image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" },
-  { id: 18, name: "Molleja Crocante", category: "Tierra", image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1200&auto=format&fit=crop" },
-  { id: 19, name: "Gnocchi de Patata Morada", category: "Tierra", image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=1200&auto=format&fit=crop" },
-  { id: 20, name: "Costilla 24h", category: "Tierra", image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop" },
-  { id: 21, name: "Soufflé de Grand Marnier", category: "Postres", image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=1200&auto=format&fit=crop" },
-  { id: 22, name: "Tarte Tatin de Vainilla", category: "Postres", image: "https://images.unsplash.com/photo-1488477181946-6428a0291777?q=80&w=1200&auto=format&fit=crop" },
-  { id: 23, name: "Éclair de Avellana", category: "Postres", image: "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?q=80&w=1200&auto=format&fit=crop" },
-  { id: 24, name: "Milhojas de Caramelo", category: "Postres", image: "https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=1200&auto=format&fit=crop" },
-  { id: 25, name: "Cacao Nocturne", category: "Postres", image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=1200&auto=format&fit=crop" },
+const spreads: BookSpread[] = [
+  {
+    id: 1,
+    title: "Entrantes",
+    subtitle: "Primeros bocados",
+    left: ["Ostra Gillardeau & Citrus", "Carpaccio de Wagyu A5", "Burrata Ahumada"],
+    right: ["Foie Gras a la Brasa", "Tartar de Atún Akami", "Vieira Dorada"],
+  },
+  {
+    id: 2,
+    title: "Mar",
+    subtitle: "Texturas del océano",
+    left: ["Langosta Thermidor", "Lubina Noisette", "Bacalao Confit"],
+    right: ["Arroz de Carabinero", "Tartar Azul", "Vieiras al carbón"],
+  },
+  {
+    id: 3,
+    title: "Tierra",
+    subtitle: "Profundidad y fuego",
+    left: ["Solomillo Rossini", "Costilla 24h", "Risotto de Trufa Negra"],
+    right: ["Pato Glaseado", "Cordero Lechal", "Pappardelle de Jabalí"],
+  },
+  {
+    id: 4,
+    title: "Postres",
+    subtitle: "Final de autor",
+    left: ["Soufflé Grand Marnier", "Milhojas de Caramelo", "Tarte Tatin de Vainilla"],
+    right: ["Éclair de Avellana", "Cacao Nocturne", "Sorbete cítrico"],
+  },
 ];
 
-const pageSets: Dish[][] = [
-  dishes.slice(0, 6),
-  dishes.slice(6, 12),
-  dishes.slice(12, 18),
-  dishes.slice(18, 25),
-];
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
 
 export default function Experience(): JSX.Element {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
-  const magneticButtonRef = useRef<HTMLButtonElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const dragStartX = useRef<number | null>(null);
 
-  useGSAP(
-    () => {
-      const timeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "+=8000",
-          pin: true,
-          scrub: 1,
-        },
-      });
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [spreadIndex, setSpreadIndex] = useState(0);
 
-      timeline
-        .fromTo(
-          ".scene-1",
-          { opacity: 1 },
-          { opacity: 1, duration: 0.6 },
-        )
-        .to(
-          ".intro-word--left",
-          { xPercent: -120, opacity: 0, duration: 0.9, ease: "power3.inOut" },
-          "+=0.5",
-        )
-        .to(
-          ".intro-word--right",
-          { xPercent: 120, opacity: 0, duration: 0.9, ease: "power3.inOut" },
-          "<",
-        )
-        .to(
-          ".intro-subtitle",
-          { yPercent: 100, opacity: 0, duration: 0.7, ease: "power2.inOut" },
-          "<",
-        )
-        .to(
-          ".book-shell",
-          { autoAlpha: 1, scale: 1, rotateX: 0, z: 0, duration: 1.2, ease: "power3.out" },
-          "-=0.3",
-        );
+  const scene = useMemo<Scene>(() => {
+    if (scrollProgress < 0.2) return 1;
+    if (scrollProgress < 0.4) return 2;
+    if (scrollProgress < 0.65) return 3;
+    if (scrollProgress < 0.85) return 4;
+    return 5;
+  }, [scrollProgress]);
 
-      pageSets.forEach((_, index) => {
-        const page = `.page-${index + 1}`;
-        const dishCards = `${page} .dish-card`;
-        timeline
-          .to(page, { rotateY: -160, duration: 1.2, ease: "power2.inOut" })
-          .fromTo(
-            dishCards,
-            { yPercent: 22, opacity: 0 },
-            {
-              yPercent: -14,
-              opacity: 1,
-              stagger: 0.08,
-              duration: 1.1,
-              ease: "power2.out",
-            },
-            "<",
-          );
-      });
+  const bookOpenProgress = clamp((scrollProgress - 0.2) / 0.2, 0, 1);
+  const readingEnabled = scene === 3;
 
-      timeline
-        .to(".book-shell", { scale: 0.9, rotateY: 0, duration: 0.7, ease: "power2.inOut" })
-        .to(".book-page", { rotateY: 0, duration: 0.7, stagger: 0.05, ease: "power2.inOut" }, "<")
-        .to(".dessert-focus", { autoAlpha: 1, scale: 1, duration: 1.3, ease: "power2.out" }, "-=0.1")
-        .to(".book-scene", { opacity: 0, duration: 0.8 }, "<")
-        .to(".cta-layer", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, "-=0.2");
-
-      gsap.to(".shimmer", {
-        xPercent: 240,
-        duration: 1.8,
-        ease: "none",
-        repeat: -1,
-      });
-    },
-    { scope: sectionRef },
-  );
-
-  const handleMagneticMove = (event: MouseEvent<HTMLButtonElement>): void => {
-    const button = magneticButtonRef.current;
-    if (!button) {
-      return;
-    }
-
-    const rect = button.getBoundingClientRect();
-    const offsetX = event.clientX - (rect.left + rect.width / 2);
-    const offsetY = event.clientY - (rect.top + rect.height / 2);
-
-    gsap.to(button, {
-      x: offsetX * 0.2,
-      y: offsetY * 0.25,
-      duration: 0.3,
-      ease: "power3.out",
-    });
+  const turnPage = (direction: -1 | 1): void => {
+    if (!readingEnabled) return;
+    setSpreadIndex((current) => clamp(current + direction, 0, spreads.length - 1));
   };
 
-  const resetMagnetic = (): void => {
-    if (!magneticButtonRef.current) {
-      return;
-    }
-
-    gsap.to(magneticButtonRef.current, {
-      x: 0,
-      y: 0,
-      duration: 0.45,
-      ease: "elastic.out(1, 0.45)",
-    });
+  const onPointerDown = (event: PointerEvent<HTMLDivElement>): void => {
+    if (!readingEnabled) return;
+    dragStartX.current = event.clientX;
   };
+
+  const onPointerUp = (event: PointerEvent<HTMLDivElement>): void => {
+    if (!readingEnabled || dragStartX.current === null) return;
+
+    const diff = event.clientX - dragStartX.current;
+    if (Math.abs(diff) > 50) {
+      turnPage(diff < 0 ? 1 : -1);
+    }
+    dragStartX.current = null;
+  };
+
+  useEffect(() => {
+    const handleScroll = (): void => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const raw = total > 0 ? -rect.top / total : 0;
+      setScrollProgress(clamp(raw, 0, 1));
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  const spread = spreads[spreadIndex];
 
   return (
-    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-black text-zinc-100">
-      <div className="scene-1 absolute inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-black px-6 text-center">
-        <motion.h2
-          initial={{ y: 50, opacity: 0, filter: "blur(14px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1.1, ease: "easeOut" }}
-          className="text-5xl font-serif tracking-wide text-zinc-100 md:text-7xl"
-        >
-          <span className="intro-word--left inline-block pr-4">Le</span>
-          <span className="intro-word--right inline-block text-amber-500">Réveil</span>
-        </motion.h2>
-        <motion.p
-          initial={{ y: 50, opacity: 0, filter: "blur(10px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 0.9, delay: 0.25, ease: "easeOut" }}
-          className="intro-subtitle max-w-xl text-xs uppercase tracking-[0.5em] text-zinc-400 md:text-sm"
-        >
-          Cartas vivas · cocina de autor · narrativa sensorial
-        </motion.p>
-      </div>
-
-      <div className="book-scene absolute inset-0 z-20 flex items-center justify-center perspective-1000 px-4 md:px-10">
-        <div className="book-shell preserve-3d relative h-[74vh] w-full max-w-6xl scale-90 opacity-0">
-          <div className="absolute inset-0 rounded-2xl bg-zinc-900 shadow-[0_40px_120px_rgba(0,0,0,0.65)] ring-1 ring-amber-500/25" />
-
-          {pageSets.map((page, pageIndex) => (
-            <article
-              key={`page-${pageIndex + 1}`}
-              className={`book-page page-${pageIndex + 1} preserve-3d absolute inset-2 origin-left rounded-xl border border-amber-500/15 bg-zinc-950 p-6 md:p-8`}
-              style={{ zIndex: 30 - pageIndex }}
-            >
-              <header className="mb-6 border-b border-amber-500/20 pb-3">
-                <p className="text-[10px] uppercase tracking-[0.4em] text-amber-500/80">Capítulo {pageIndex + 1}</p>
-                <h3 className="mt-2 font-serif text-2xl text-zinc-100 md:text-3xl">La Carta Magna</h3>
-              </header>
-
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                {page.map((dish) => (
-                  <div key={dish.id} className="dish-card group">
-                    <div className="relative mb-2 aspect-[4/5] overflow-hidden rounded-lg ring-1 ring-amber-500/20">
-                      <Image
-                        src={dish.image}
-                        alt={dish.name}
-                        fill
-                        sizes="(max-width: 768px) 50vw, 20vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    </div>
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-amber-500/80">{dish.category}</p>
-                    <p className="line-clamp-2 font-serif text-sm text-zinc-100 md:text-base">{dish.name}</p>
-                  </div>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-
-      <div className="dessert-focus pointer-events-none absolute inset-0 z-30 scale-125 opacity-0">
+    <section ref={sectionRef} className="relative h-[500vh] bg-[#050505] text-zinc-100">
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-3 py-6 sm:px-6 lg:px-10">
         <Image
-          src="https://images.unsplash.com/photo-1559622214-49d6c0f839eb?q=80&w=1800&auto=format&fit=crop"
-          alt="Postre estrella"
+          src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2200&auto=format&fit=crop"
+          alt="Sala restaurante"
           fill
-          priority
+          className="object-cover opacity-30"
           sizes="100vw"
-          className="object-cover"
+          priority
         />
-        <div className="absolute inset-0 bg-black/35" />
-      </div>
+        <div className="absolute inset-0 bg-black/75" />
 
-      <div className="cta-layer absolute inset-0 z-50 flex translate-y-10 items-end justify-center px-6 pb-20 opacity-0">
-        <button
-          ref={magneticButtonRef}
-          type="button"
-          onMouseMove={handleMagneticMove}
-          onMouseLeave={resetMagnetic}
-          className="group relative overflow-hidden rounded-full border border-amber-400/70 bg-black/70 px-12 py-4 text-sm uppercase tracking-[0.3em] text-amber-400 backdrop-blur-md transition-colors duration-300 hover:bg-amber-500 hover:text-black"
-        >
-          <span className="relative z-20">Reservar Mesa</span>
-          <span className="shimmer absolute inset-y-0 -left-1/2 z-10 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-amber-200/70 to-transparent" />
-        </button>
+        <div className="relative z-20 flex w-full max-w-6xl flex-col items-center gap-6">
+          <p className="text-center text-[10px] uppercase tracking-[0.45em] text-amber-400 sm:text-xs">
+            Escena {scene} de 5
+          </p>
+
+          {scene === 1 && (
+            <div className="text-center">
+              <h2 className="font-serif text-4xl sm:text-6xl">Le Réveil</h2>
+              <p className="mt-4 max-w-xl text-sm text-zinc-300 sm:text-base">Scroll para abrir el libro.</p>
+            </div>
+          )}
+
+          {(scene === 2 || scene === 3 || scene === 4) && (
+            <div className="relative w-full max-w-5xl [perspective:1800px]">
+              <div
+                onPointerDown={onPointerDown}
+                onPointerUp={onPointerUp}
+                className="mx-auto grid min-h-[58vh] cursor-grab grid-cols-2 overflow-hidden rounded-2xl border border-amber-300/30 bg-[#120f0b] shadow-[0_20px_90px_rgba(0,0,0,.7)] active:cursor-grabbing"
+                style={{
+                  transform: `rotateX(${(1 - bookOpenProgress) * 28}deg) scale(${0.78 + bookOpenProgress * 0.22})`,
+                  transformOrigin: "center bottom",
+                }}
+              >
+                <div className="border-r border-amber-100/15 bg-[linear-gradient(90deg,rgba(255,255,255,.08),transparent_16%)] p-4 sm:p-8">
+                  <p className="text-[10px] uppercase tracking-[0.35em] text-amber-400/90">{spread.subtitle}</p>
+                  <h3 className="mt-3 font-serif text-2xl sm:text-4xl">{spread.title}</h3>
+                  <ul className="mt-6 space-y-3 text-sm text-zinc-200 sm:text-base">
+                    {spread.left.map((item) => (
+                      <li key={item}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-[linear-gradient(-90deg,rgba(255,255,255,.07),transparent_16%)] p-4 sm:p-8">
+                  <p className="text-[10px] uppercase tracking-[0.35em] text-amber-400/90">Página {spread.id}</p>
+                  <ul className="mt-14 space-y-3 text-sm text-zinc-200 sm:text-base">
+                    {spread.right.map((item) => (
+                      <li key={item}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm">
+                <button
+                  type="button"
+                  onClick={() => turnPage(-1)}
+                  className="rounded-full border border-amber-300/60 px-4 py-2 text-amber-200 disabled:opacity-35"
+                  disabled={!readingEnabled || spreadIndex === 0}
+                >
+                  Página anterior
+                </button>
+                <button
+                  type="button"
+                  onClick={() => turnPage(1)}
+                  className="rounded-full border border-amber-300/60 px-4 py-2 text-amber-200 disabled:opacity-35"
+                  disabled={!readingEnabled || spreadIndex === spreads.length - 1}
+                >
+                  Página siguiente
+                </button>
+              </div>
+
+              <p className="mt-2 text-center text-xs text-zinc-400">
+                {readingEnabled
+                  ? "Arrastra con ratón o dedo para pasar páginas."
+                  : "Sigue haciendo scroll hasta abrir el libro al 100%."}
+              </p>
+            </div>
+          )}
+
+          {scene === 4 && <p className="text-sm text-zinc-300">Cierre cinematográfico del menú.</p>}
+
+          {scene === 5 && (
+            <div className="text-center">
+              <h3 className="font-serif text-3xl sm:text-5xl">Reserva tu mesa</h3>
+              <p className="mt-2 text-zinc-300">Experiencia completa en cualquier pantalla.</p>
+              <button className="mt-6 rounded-full bg-amber-400 px-8 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-black">
+                Reservar
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

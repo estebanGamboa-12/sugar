@@ -6,33 +6,27 @@ type Book3DProps = {
   pageRefs: (HTMLDivElement | null)[];
 };
 
-const leafs = [
-  { title: "Degustación", subtitle: "12 pases" },
-  { title: "Signature", subtitle: "Cocina de autor" },
-  { title: "Maridaje", subtitle: "Grandes cosechas" },
-  { title: "Desserts", subtitle: "Final haute pâtisserie" },
-];
+const pages = ["Degustación", "Cocina de autor", "Maridaje", "Postres"];
 
 const Book3D = forwardRef<HTMLDivElement, Book3DProps>(({ pageRefs }, ref) => {
   return (
-    <div ref={ref} className="relative h-[390px] w-[min(86vw,560px)] [perspective:2000px]">
-      <div className="absolute inset-0 rounded-2xl bg-[#1a120d] shadow-[0_35px_100px_rgba(0,0,0,0.6)]" />
-      <div className="absolute inset-[10px] rounded-2xl border border-[#b89266]/35" />
+    <div ref={ref} className="relative h-[360px] w-[min(78vw,520px)] [perspective:1800px]">
+      <div className="absolute inset-0 rounded-2xl border border-white/20 bg-[#1b120d] shadow-[0_30px_90px_rgba(0,0,0,0.45)]" />
 
-      <div className="absolute inset-0 [transform-style:preserve-3d]">
-        {leafs.map((leaf, index) => (
+      <div className="absolute inset-0 rounded-2xl [transform-style:preserve-3d]">
+        {pages.map((title, index) => (
           <div
-            key={leaf.title}
+            key={title}
             ref={(node) => {
               pageRefs[index] = node;
             }}
-            className="absolute inset-[14px] origin-[left_center] rounded-xl border border-[#d8b78a]/35 bg-gradient-to-br from-[#f9edd8] to-[#ead4ae] p-8 text-[#2d1d12] [backface-visibility:hidden] [transform-style:preserve-3d]"
-            style={{ zIndex: leafs.length - index }}
+            className="absolute inset-0 origin-[left_center] rounded-2xl border border-white/10 bg-gradient-to-br from-[#f8edd8] to-[#e9d8b5] p-8 text-[#2b1d14] shadow-2xl [backface-visibility:hidden] [transform-style:preserve-3d]"
+            style={{ zIndex: pages.length - index }}
           >
-            <p className="text-[10px] uppercase tracking-[0.35em] text-[#7f5b3e]">{leaf.subtitle}</p>
-            <h3 className="mt-4 font-serif text-3xl md:text-4xl">{leaf.title}</h3>
-            <p className="mt-5 max-w-xs text-sm text-[#4f3a2a]">
-              Carta ceremonial diseñada para un servicio de lujo con ritmo pausado y precisión absoluta.
+            <p className="text-xs uppercase tracking-[0.35em] text-[#7a5a40]">Collection {index + 1}</p>
+            <h3 className="mt-4 font-serif text-3xl">{title}</h3>
+            <p className="mt-4 max-w-xs text-sm text-[#4f3a2b]">
+              Selección curada para una velada de alta cocina con ritmo ceremonial.
             </p>
           </div>
         ))}

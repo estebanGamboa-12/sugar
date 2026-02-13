@@ -4,7 +4,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 export default function Page() {
   return (
     <SmoothScroll>
-      <main className="bg-[#070707] text-[#f6ecdd]">
+      <main className="bg-[#090909] text-[#f7f0e6]">
         <Experience />
       </main>
     </SmoothScroll>

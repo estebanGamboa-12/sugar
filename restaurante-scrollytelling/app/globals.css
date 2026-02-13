@@ -1,7 +1,12 @@
+@import "tailwindcss";
+
 body {
-  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000000 100%);
+  background: #0a0a0a;
+  color: white;
+  overflow-x: hidden;
 }
 
+/* Necesario para el efecto de las hojas del libro */
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
